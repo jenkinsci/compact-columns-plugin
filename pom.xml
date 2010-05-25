@@ -7,10 +7,9 @@
     <version>1.349</version>
   </parent>
   
-  <groupId>com.robestone.hudson</groupId>
   <artifactId>compact-columns</artifactId>
   <packaging>hpi</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <name>Compact Columns</name>
   
   <description>

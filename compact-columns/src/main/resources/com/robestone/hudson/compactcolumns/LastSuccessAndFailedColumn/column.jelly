@@ -1,0 +1,26 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+      <td>
+          <j:if test="${lsBuild!=null}">
+              <a href="${jobBaseUrl}${job.shortUrl}lastSuccessfulBuild/" 
+              	 style="color: blue"
+              	 tooltip="${%Build} #${lsBuild.number} ${%succeeded}"
+              	 >
+              	${it.getSuccessTimestamp(job)}
+              </a>
+	          <j:if test="${lfBuild!=null}">
+	              <st:nbsp/>/<st:nbsp/>
+	          </j:if>
+          </j:if>
+          <j:if test="${lfBuild!=null}">
+          	<a href="${jobBaseUrl}${job.shortUrl}lastFailedBuild/" 
+          	   style="color: red"
+          	   tooltip="${%Build} #${lfBuild.number} ${%failed}"
+          	   >
+          		${it.getFailedTimestamp(job)}
+          	</a>
+          </j:if>
+          <j:if test="${empty(lsBuild) and empty(lfBuild)}">
+              ${%N/A}
+          </j:if>
+      </td>
+</j:jelly>

@@ -25,7 +25,6 @@ package com.robestone.hudson.compactcolumns;
 
 import hudson.Extension;
 import hudson.Messages;
-import hudson.model.Job;
 import hudson.model.Run;
 import hudson.views.ListViewColumn;
 import hudson.views.ListViewColumnDescriptor;
@@ -48,15 +47,8 @@ public class LastSuccessAndFailedColumn extends ListViewColumn {
     @DataBoundConstructor
     public LastSuccessAndFailedColumn() {
     }
-    public String getSuccessTimestamp(Job<?, ?> job) {
-    	Run<?, ?> run = job.getLastSuccessfulBuild();
-    	return getTimestamp(run);
-    }
-    public String getFailedTimestamp(Job<?, ?> job) {
-    	Run<?, ?> run = job.getLastFailedBuild();
-    	return getTimestamp(run);
-    }
-    protected String getTimestamp(Run<?, ?> run) {
+
+    public String getTimestamp(Run<?, ?> run) {
     	long now = System.currentTimeMillis();
     	long timestamp = run.getTimestamp().getTimeInMillis();
     	float diff = now - timestamp;

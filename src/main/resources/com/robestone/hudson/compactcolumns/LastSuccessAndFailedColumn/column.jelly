@@ -1,26 +1,42 @@
+
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-      <td>
-          <j:if test="${lsBuild!=null}">
-              <a href="${jobBaseUrl}${job.shortUrl}lastSuccessfulBuild/" 
-              	 style="color: blue"
-              	 tooltip="${%Build} #${lsBuild.number} ${%succeeded}"
-              	 >
-              	${it.getSuccessTimestamp(job)}
-              </a>
-	          <j:if test="${lfBuild!=null}">
-	              <st:nbsp/>/<st:nbsp/>
-	          </j:if>
-          </j:if>
-          <j:if test="${lfBuild!=null}">
-          	<a href="${jobBaseUrl}${job.shortUrl}lastFailedBuild/" 
+    <td>
+        <j:set var="stable" value="${job.lastStableBuild}"/>
+        <j:set var="unstable" value="${job.lastSuccessfulBuild != null &amp;&amp;
+                                       job.lastSuccessfulBuild != stable ?
+                                       job.lastSuccessfulBuild : null}"/>
+        <j:set var="failed" value="${job.lastCompletedBuild != null &amp;&amp;
+                                     job.lastCompletedBuild != job.lastSuccessfulBuild ?
+                                     job.lastCompletedBuild : null}"/>
+        <j:if test="${failed != null}">
+            <a href="${jobBaseUrl}${job.shortUrl}lastCompletedBuild/"
           	   style="color: red"
-          	   tooltip="${%Build} #${lfBuild.number} ${%failed}"
-          	   >
-          		${it.getFailedTimestamp(job)}
-          	</a>
-          </j:if>
-          <j:if test="${empty(lsBuild) and empty(lfBuild)}">
+          	   tooltip="${%Build} #${failed.number} ${%failed}">
+          		${it.getTimestamp(failed)}
+            </a>
+            <j:if test="${unstable != null || stable != null}">
+                <st:nbsp/>/<st:nbsp/>
+            </j:if>
+        </j:if>
+        <j:if test="${unstable != null}">
+            <a href="${jobBaseUrl}${job.shortUrl}lastSuccessfulBuild/"
+              	 style="color: gold"
+              	 tooltip="${%Build} #${unstable.number} ${%was unstable}">
+              	${it.getTimestamp(unstable)}
+            </a>
+            <j:if test="${stable != null}">
+                <st:nbsp/>/<st:nbsp/>
+            </j:if>
+        </j:if>
+        <j:if test="${stable != null}">
+            <a href="${jobBaseUrl}${job.shortUrl}lastStableBuild/"
+              	 style="color: blue"
+              	 tooltip="${%Build} #${stable.number} ${%was stable}">
+              	${it.getTimestamp(stable)}
+            </a>
+        </j:if>
+        <j:if test="${job.lastCompletedBuild == null}">
               ${%N/A}
-          </j:if>
-      </td>
+        </j:if>
+    </td>
 </j:jelly>

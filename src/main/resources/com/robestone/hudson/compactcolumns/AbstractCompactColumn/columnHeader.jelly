@@ -1,0 +1,10 @@
+<j:jelly xmlns:j="jelly:core">
+    <th tooltip=
+    "&lt;span style='text-decoration: underline; color: red;'&gt;Failed&lt;/span&gt;;
+     &lt;span style='text-decoration: underline; color: orange;'&gt;Unstable&lt;/span&gt;; 
+     &lt;span style='text-decoration: underline; color: blue;'&gt;Stable&lt;/span&gt;
+    &lt;br/&gt;
+	&lt;b&gt;More Recent&lt;/b&gt; &gt; Less Recent
+	"
+    >${%Last Statuses}</th>
+</j:jelly>

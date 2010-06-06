@@ -1,0 +1,26 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+	<td>
+		<j:choose>
+		<j:when test="${!it.isBuildsEmpty(job)}">
+      		<j:forEach var="build" items="${it.getBuilds(job)}">
+				<j:if test="${!build.first}">
+					<st:nbsp/>&gt;<st:nbsp/>
+				</j:if>
+				<a href="${jobBaseUrl}${job.shortUrl}${build.urlPart}" 
+					style="color: ${build.color}; font-weight: ${build.fontWeight}"
+					tooltip="&lt;b&gt;&lt;u&gt;${%Build} #${build.run.number}${build.latestBuildString}&lt;/u&gt;&lt;/b&gt;
+						&lt;ul&gt;
+						&lt;li&gt;Built @ &lt;b&gt;${build.buildTimeString}&lt;/b&gt;&lt;/li&gt;
+						&lt;li&gt;Ended ${build.timeAgoString} ago&lt;/li&gt;
+						&lt;li&gt;Lasted &lt;b&gt;${build.run.durationString}&lt;/li&gt;
+						&lt;li&gt;&lt;b&gt;${build.status}&lt;/li&gt;
+						&lt;/ul&gt;"
+				>${build.timeAgoString}</a>
+			</j:forEach>
+		</j:when>
+		<j:otherwise>
+			${%N/A}
+		</j:otherwise>
+		</j:choose>
+	</td>
+</j:jelly>

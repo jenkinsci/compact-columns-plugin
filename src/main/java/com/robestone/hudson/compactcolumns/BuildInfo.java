@@ -1,5 +1,7 @@
 package com.robestone.hudson.compactcolumns;
 
+import java.util.Locale;
+
 import hudson.model.Run;
 
 public class BuildInfo implements Comparable<BuildInfo> {
@@ -7,7 +9,7 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	private Run<?, ?> run;
 	private String color;
 	private String timeAgoString;
-	private String buildTimeString;
+	private long buildTime;
 	private String status;
 	private String urlPart;
 	private boolean isFirst;
@@ -15,12 +17,12 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	private boolean multipleBuilds;
 	
 	public BuildInfo(Run<?, ?> run, String color, String timeAgoString,
-			String buildTimeString, String status, String urlPart,
+			long buildTime, String status, String urlPart,
 			boolean isLatestBuild) {
 		this.run = run;
 		this.color = color;
 		this.timeAgoString = timeAgoString;
-		this.buildTimeString = buildTimeString;
+		this.buildTime = buildTime;
 		this.status = status;
 		this.urlPart = urlPart;
 		this.isLatestBuild = isLatestBuild;
@@ -34,8 +36,8 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	public String getTimeAgoString() {
 		return timeAgoString;
 	}
-	public String getBuildTimeString() {
-		return buildTimeString;
+	public String getBuildTimeString(Locale locale) {
+		return AbstractCompactColumn.getBuildTimeString(buildTime, locale);
 	}
 	public String getStatus() {
 		return status;

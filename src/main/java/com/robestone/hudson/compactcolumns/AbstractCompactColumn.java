@@ -31,11 +31,13 @@ import hudson.views.ListViewColumn;
 import hudson.views.ListViewColumnDescriptor;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public abstract class AbstractCompactColumn extends ListViewColumn {
@@ -139,13 +141,13 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     private BuildInfo createBuildInfo(Run<?, ?> run, String color, String status, String urlPart, Job<?, ?> job) {
     	if (run != null) {
 	    	String timeAgoString = getTimeAgoString(run.getTimeInMillis());
-	    	String buildTimeString = getBuildTimeString(run.getTime().getTime());
+	    	long buildTime = run.getTime().getTime();
 	    	if (urlPart == null) {
 	    		urlPart = String.valueOf(run.number);
 	    	}
 	    	Run<?, ?> latest = job.getLastBuild();
 	    	BuildInfo build = new BuildInfo(
-	    			run, color, timeAgoString, buildTimeString, 
+	    			run, color, timeAgoString, buildTime, 
 	    			status, urlPart, run.number == latest.number);
 	    	return build;
     	}
@@ -157,11 +159,32 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	String stime = getShortTimestamp(diff);
     	return stime;
     }
-    protected String getBuildTimeString(long timeMs) {
+    protected static String getBuildTimeString(long timeMs, Locale locale) {
     	Date time = new Date(timeMs);
-    	// TODO localize?
-    	SimpleDateFormat format = new SimpleDateFormat("h:mm a, MM/dd/yyyy");
-    	return format.format(time);
+    	DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+    	String datePattern = getDatePattern(locale);
+    	DateFormat dateFormat = new SimpleDateFormat(datePattern, locale);
+    	String timeString = timeFormat.format(time);
+    	String dateString = dateFormat.format(time);
+    	String dateTimeString = timeString + ", " + dateString;
+    	return dateTimeString;
+    }
+    
+    /**
+     * I want to use 4-digit years (for clarity), and that doesn't work out of the box...
+     */
+    protected static String getDatePattern(Locale locale) {
+    	DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+    	if (format instanceof SimpleDateFormat) {
+    		String s = ((SimpleDateFormat) format).toPattern();
+    		if (!s.contains("yyyy")) {
+    			s = s.replace("yy", "yyyy");
+    		}
+    		return s;
+    	} else {
+    		// shown by unit test to not be a problem...
+    		throw new IllegalArgumentException("Can't handle locale: " + locale);
+    	}
     }
     
     /**

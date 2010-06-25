@@ -28,6 +28,7 @@ import hudson.model.Result;
 import hudson.model.Run;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -36,6 +37,28 @@ import junit.framework.TestCase;
 public class CompactColumnsTest extends TestCase {
 
 	private LastSuccessAndFailedColumn col = new LastSuccessAndFailedColumn();
+	
+	/**
+	 * Shows that all locale handling will be okay.
+	 */
+	public void testNoBadLocale() {
+		Locale[] locales = Locale.getAvailableLocales();
+		for (Locale locale: locales) {
+			String s = AbstractCompactColumn.getBuildTimeString(1277416568304L, locale);
+			assertNotNull(s);
+		}
+	}
+	
+	public void testLocalizeDate() {
+		long time = 1277416568304L;
+		doTestLocalizeDate(time, Locale.ENGLISH, "4:56 PM, 6/24/2010");
+		doTestLocalizeDate(time, Locale.GERMAN, "16:56, 24.06.2010");
+		doTestLocalizeDate(time, Locale.CANADA, "4:56 PM, 24/06/2010");
+	}
+	private void doTestLocalizeDate(long time, Locale locale, String expect) {
+		String found = AbstractCompactColumn.getBuildTimeString(time, locale);
+		assertEquals(expect, found);
+	}
 	
 	/**
 	 * This just shows the weird way the Hudson.util is working.

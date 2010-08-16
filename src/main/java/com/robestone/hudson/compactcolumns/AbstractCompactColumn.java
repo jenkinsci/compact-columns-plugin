@@ -50,6 +50,15 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     private static final long ONE_MONTH_MS = 30 * ONE_DAY_MS;
     private static final long ONE_YEAR_MS = 365 * ONE_DAY_MS;
 
+    public String getColumnSortData(Job<?, ?> job) {
+    	List<BuildInfo> builds = getBuilds(job);
+    	if (builds.isEmpty()) {
+    		return "0";
+    	}
+    	BuildInfo latest = builds.get(0);
+    	return String.valueOf(latest.getBuildTime());
+    }
+    
     public boolean isBuildsEmpty(Job<?, ?> job) {
     	// TODO -- make much more efficient
     	return getBuilds(job).isEmpty();
@@ -145,7 +154,10 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
 	    	if (urlPart == null) {
 	    		urlPart = String.valueOf(run.number);
 	    	}
-	    	Run<?, ?> latest = job.getLastBuild();
+	    	Run<?, ?> latest = job.getLastCompletedBuild();
+	    	if (latest == null) {
+	    		latest = job.getLastBuild();
+	    	}
 	    	BuildInfo build = new BuildInfo(
 	    			run, color, timeAgoString, buildTime, 
 	    			status, urlPart, run.number == latest.number);

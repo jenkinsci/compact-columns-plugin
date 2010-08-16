@@ -1,5 +1,5 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
-	<td>
+	<td data="${it.getColumnSortData(job)}">
 		<j:choose>
 		<j:when test="${!it.isBuildsEmpty(job)}">
       		<j:forEach var="build" items="${it.getBuilds(job)}">

@@ -51,6 +51,9 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	public boolean isLatestBuild() {
 		return isLatestBuild;
 	}
+	public long getBuildTime() {
+		return buildTime;
+	}
 	
 	// ----
 	

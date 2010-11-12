@@ -9,7 +9,7 @@
   
   <artifactId>compact-columns</artifactId>
   <packaging>hpi</packaging>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.4</version>
   <name>Compact Columns</name>
   
   <description>
@@ -25,4 +25,10 @@
       <email>jacob.robertson.work@gmail.com</email>
     </developer>
   </developers>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/compact-columns-1.4</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/compact-columns-1.4</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/tags/compact-columns-1.4</url>
+  </scm>
 </project>

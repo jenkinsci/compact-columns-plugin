@@ -1,0 +1,8 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <td style="${indenter.getCss(job)}">
+        <a href="${jobBaseUrl}${job.shortUrl}"
+        	tooltip="${job.description}"
+        	style="${it.getStyle(job)}"
+         >${job.displayName}</a>
+    </td>
+</j:jelly>

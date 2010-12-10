@@ -25,4 +25,8 @@
       <email>jacob.robertson.work@gmail.com</email>
     </developer>
   </developers>
+
+  <scm>
+    <url>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/plugins/compact-columns</url>
+  </scm>
 </project>

@@ -27,6 +27,8 @@
   </developers>
 
   <scm>
-    <url>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/plugins/compact-columns</url>
+    <connection>scm:svn:https://jacob_robertson@svn.java.net/svn/hudson~svn/trunk/hudson/plugins/compact-columns</connection>
+	<developerConnection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/plugins/compact-columns</developerConnection>    
+    <url>http://java.net/projects/hudson/sources/svn/show/trunk/hudson/plugins/compact-columns</url>
   </scm>
 </project>

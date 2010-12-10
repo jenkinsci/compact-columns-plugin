@@ -36,9 +36,6 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	public String getTimeAgoString() {
 		return timeAgoString;
 	}
-	public String getBuildTimeString(Locale locale) {
-		return AbstractCompactColumn.getBuildTimeString(buildTime, locale);
-	}
 	public String getStatus() {
 		return status;
 	}
@@ -57,13 +54,22 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	
 	// ----
 	
-	public String getLatestBuildString() {
+	public String getLatestBuildString(Locale locale) {
     	if (isLatestBuild) {
-    		// TODO message
-    		return " (Latest Build)";
+    		return " (" + Messages.latestBuild() + ")";
     	} else {
     		return "";
     	}
+	}
+	public String getStartedAgo(Locale locale) {
+		return Messages._startedAgo(timeAgoString).toString(locale);
+	}
+	public String getBuiltAt(Locale locale) {
+		String time = AbstractCompactColumn.getBuildTimeString(buildTime, locale);
+		return Messages._builtAt(time).toString(locale);
+	}
+	public String getLastedDuration(Locale locale) {
+		return Messages._lastedDuration(run.getDurationString()).toString(locale);
 	}
 	public String getFontWeight() {
     	if (isLatestBuild && multipleBuilds) {

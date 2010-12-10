@@ -23,7 +23,7 @@
  */
 package com.robestone.hudson.compactcolumns;
 
-import hudson.Messages;
+
 import hudson.model.Job;
 import hudson.model.Result;
 import hudson.model.Run;
@@ -71,7 +71,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	addNonNull(builds, getLastStableBuild(job));
 
     	if (builds.isEmpty()) {
-        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", "Aborted", null, job);
+        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", getAbortedMessage(), null, job);
         	addNonNull(builds, aborted);
     	}
     	
@@ -96,7 +96,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	if (lastFailedBuild == null) {
     		return null;
     	} else if (!onlyIfLastCompleted || (lastCompletedBuild.number == lastFailedBuild.number)) {
-        	return createBuildInfo(job.getLastFailedBuild(), "red", "Failed", "lastFailedBuild", job);
+        	return createBuildInfo(job.getLastFailedBuild(), "red", getFailedMessage(), "lastFailedBuild", job);
     	} else {
     		return null;
     	}
@@ -105,7 +105,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     abstract protected boolean isUnstableShownOnlyIfLast();
 
     public BuildInfo getLastStableBuild(Job<?, ?> job) {
-    	return createBuildInfo(job.getLastStableBuild(), "blue", "Stable", "lastStableBuild", job);
+    	return createBuildInfo(job.getLastStableBuild(), "blue", getStableMessage(), "lastStableBuild", job);
     }
 
     public BuildInfo getLastUnstableBuild(Job<?, ?> job) {
@@ -129,7 +129,8 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	}
     	
 		String unstableColor = "orange"; // best color that is "yellow" but visible too
-    	return createBuildInfo(lastUnstable, unstableColor, "Unstable", String.valueOf(lastUnstable.number), job);
+		
+    	return createBuildInfo(lastUnstable, unstableColor, getUnstableMessage(), String.valueOf(lastUnstable.number), job);
     }
 
     protected void addNonNull(List<BuildInfo> builds, BuildInfo info) {
@@ -212,24 +213,24 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	float number;
     	if (time >= ONE_YEAR_MS) {
     		number = getRoundedNumber(time / ONE_YEAR_MS);
-    		ts = Messages.Util_year(number);
+    		ts = hudson.Messages.Util_year(number);
     	} else if (time >= ONE_MONTH_MS) {
     		number = getRoundedNumber(time / ONE_MONTH_MS);
-    		ts = Messages.Util_month(number);
+    		ts = hudson.Messages.Util_month(number);
     	} else if (time >= ONE_DAY_MS) {
     		number = getRoundedNumber(time / ONE_DAY_MS);
-    		ts = Messages.Util_day(number);
+    		ts = hudson.Messages.Util_day(number);
     	} else if (time >= ONE_HOUR_MS) {
     		number = getRoundedNumber(time / ONE_HOUR_MS);
-    		ts = Messages.Util_hour(number);
+    		ts = hudson.Messages.Util_hour(number);
     	} else if (time >= ONE_MINUTE_MS) {
     		number = getRoundedNumber(time / ONE_MINUTE_MS);
-    		ts = Messages.Util_minute(number);
+    		ts = hudson.Messages.Util_minute(number);
     	} else if (time >= ONE_SECOND_MS) {
     		number = getRoundedNumber(time / ONE_SECOND_MS);
-    		ts = Messages.Util_second(number);
+    		ts = hudson.Messages.Util_second(number);
     	} else {
-        	ts = Messages.Util_second(0);
+        	ts = hudson.Messages.Util_second(0);
     	}
     	return ts;
     }
@@ -242,6 +243,28 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     		scale = 1;
     	}
     	return new BigDecimal(number).setScale(scale, BigDecimal.ROUND_HALF_DOWN).floatValue();
+    }
+
+    public static final String getFailedMessage() {
+    	return hudson.model.Messages.BallColor_Failed();
+    }
+    public static final String getUnstableMessage() {
+    	return hudson.model.Messages.BallColor_Unstable();
+    }
+    public static final String getAbortedMessage() {
+    	return hudson.model.Messages.BallColor_Aborted();
+    }
+    public static final String getStableMessage() {
+    	String message = hudson.model.Messages.Run_Summary_Stable();
+    	if (message != null && message.length() > 1) {
+    		// this logic is here solely so I can re-use the "stable" messages, but make it capitalized
+    		char c = message.charAt(0);
+    		if (Character.isLowerCase(c)) {
+    			c = Character.toUpperCase(c);
+    			message = c + message.substring(1);
+    		}
+    	}
+    	return message;
     }
 
     public abstract static class AbstractCompactColumnDescriptor extends ListViewColumnDescriptor {

@@ -1,10 +1,15 @@
 <j:jelly xmlns:j="jelly:core">
+
+	<j:invokeStatic var="message_failed" className="com.robestone.hudson.compactcolumns.AbstractCompactColumn" method="getFailedMessage"/>
+	<j:invokeStatic var="message_unstable" className="com.robestone.hudson.compactcolumns.AbstractCompactColumn" method="getUnstableMessage"/>
+	<j:invokeStatic var="message_stable" className="com.robestone.hudson.compactcolumns.AbstractCompactColumn" method="getStableMessage"/>
+
     <th tooltip=
-    "&lt;span style='text-decoration: underline; color: red;'&gt;Failed&lt;/span&gt;;
-     &lt;span style='text-decoration: underline; color: orange;'&gt;Unstable&lt;/span&gt;; 
-     &lt;span style='text-decoration: underline; color: blue;'&gt;Stable&lt;/span&gt;
+    "&lt;span style='text-decoration: underline; color: red;'&gt;${message_failed}&lt;/span&gt;;
+     &lt;span style='text-decoration: underline; color: orange;'&gt;${message_unstable}&lt;/span&gt;; 
+     &lt;span style='text-decoration: underline; color: blue;'&gt;${message_stable}&lt;/span&gt;
     &lt;br/&gt;
-	&lt;b&gt;More Recent&lt;/b&gt; &gt; Less Recent
+	&lt;b&gt;${%More Recent}&lt;/b&gt; &gt; ${%Less Recent}
 	"
     >${%Last Statuses}</th>
 </j:jelly>

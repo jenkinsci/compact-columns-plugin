@@ -45,7 +45,7 @@ public class AllStatusesColumn extends AbstractCompactColumn {
 			AbstractCompactColumnDescriptor {
 		@Override
 		public String getDisplayName() {
-			return "Compact Column: All Statuses";
+			return Messages.Compact_Column_All_Statuses();
 		}
 	}
 }

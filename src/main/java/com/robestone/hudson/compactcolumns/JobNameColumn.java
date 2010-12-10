@@ -17,7 +17,7 @@ public class JobNameColumn extends JobColumn {
     public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
         @Override
         public String getDisplayName() {
-            return "Compact Column: Job Name";
+            return Messages.Compact_Column_Job_Name();
         }
     }
 }

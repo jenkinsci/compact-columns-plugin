@@ -45,7 +45,7 @@ public class LastSuccessAndFailedColumn extends AbstractCompactColumn {
 			AbstractCompactColumnDescriptor {
 		@Override
 		public String getDisplayName() {
-			return "Compact Column: Stable + Failed";
+			return Messages.Compact_Column_Stable_Failed();
 		}
 	}
 }

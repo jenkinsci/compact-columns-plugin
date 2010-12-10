@@ -44,7 +44,7 @@ public class LastStableAndUnstableColumn extends AbstractCompactColumn {
 			AbstractCompactColumnDescriptor {
 		@Override
 		public String getDisplayName() {
-			return "Compact Column: Unstable + Stable";
+			return Messages.Compact_Column_Unstable_Stable();
 		}
 	}
 }

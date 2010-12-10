@@ -48,7 +48,7 @@ public class JobNameColorColumn extends JobColumn {
     public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
         @Override
         public String getDisplayName() {
-            return "Compact Column: Job Name w/ Status Color";
+            return Messages.Compact_Column_Job_Name_w_Status_Color();
         }
     }
 }

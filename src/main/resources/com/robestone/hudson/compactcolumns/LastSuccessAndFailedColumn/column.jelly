@@ -1,3 +1,0 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
-	<st:include page="column.jelly" class="com.robestone.hudson.compactcolumns.AbstractCompactColumn" optional="false"/>
-</j:jelly>

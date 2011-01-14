@@ -8,6 +8,7 @@ public class BuildInfo implements Comparable<BuildInfo> {
 
 	private Run<?, ?> run;
 	private String color;
+	private String underlineStyle;
 	private String timeAgoString;
 	private long buildTime;
 	private String status;
@@ -16,11 +17,12 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	private boolean isLatestBuild;
 	private boolean multipleBuilds;
 	
-	public BuildInfo(Run<?, ?> run, String color, String timeAgoString,
+	public BuildInfo(Run<?, ?> run, String color, String underlineStyle, String timeAgoString,
 			long buildTime, String status, String urlPart,
 			boolean isLatestBuild) {
 		this.run = run;
 		this.color = color;
+		this.underlineStyle = underlineStyle;
 		this.timeAgoString = timeAgoString;
 		this.buildTime = buildTime;
 		this.status = status;
@@ -77,6 +79,9 @@ public class BuildInfo implements Comparable<BuildInfo> {
     	} else {
     		return "normal";
     	}
+	}
+	public String getUnderlineStyle() {
+		return underlineStyle;
 	}
 	public void setFirst(boolean first) {
 		this.isFirst = first;

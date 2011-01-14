@@ -42,6 +42,11 @@ import java.util.Locale;
 
 public abstract class AbstractCompactColumn extends ListViewColumn {
 
+	public static final String OTHER_UNDERLINE_STYLE = "1px dashed";
+	public static final String UNSTABLE_UNDERLINE_STYLE = "1px dashed";
+	public static final String STABLE_UNDERLINE_STYLE = "0px solid";
+	public static final String FAILED_UNDERLINE_STYLE = "1px solid";
+	
 	// copied from hudson.Util because they were private
     private static final long ONE_SECOND_MS = 1000;
     private static final long ONE_MINUTE_MS = 60 * ONE_SECOND_MS;
@@ -71,7 +76,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	addNonNull(builds, getLastStableBuild(job));
 
     	if (builds.isEmpty()) {
-        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", getAbortedMessage(), null, job);
+        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job);
         	addNonNull(builds, aborted);
     	}
     	
@@ -96,7 +101,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	if (lastFailedBuild == null) {
     		return null;
     	} else if (!onlyIfLastCompleted || (lastCompletedBuild.number == lastFailedBuild.number)) {
-        	return createBuildInfo(job.getLastFailedBuild(), "red", getFailedMessage(), "lastFailedBuild", job);
+        	return createBuildInfo(job.getLastFailedBuild(), "red", FAILED_UNDERLINE_STYLE, getFailedMessage(), "lastFailedBuild", job);
     	} else {
     		return null;
     	}
@@ -105,7 +110,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     abstract protected boolean isUnstableShownOnlyIfLast();
 
     public BuildInfo getLastStableBuild(Job<?, ?> job) {
-    	return createBuildInfo(job.getLastStableBuild(), "blue", getStableMessage(), "lastStableBuild", job);
+    	return createBuildInfo(job.getLastStableBuild(), "blue", STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job);
     }
 
     public BuildInfo getLastUnstableBuild(Job<?, ?> job) {
@@ -130,7 +135,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	
 		String unstableColor = "orange"; // best color that is "yellow" but visible too
 		
-    	return createBuildInfo(lastUnstable, unstableColor, getUnstableMessage(), String.valueOf(lastUnstable.number), job);
+    	return createBuildInfo(lastUnstable, unstableColor, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job);
     }
 
     protected void addNonNull(List<BuildInfo> builds, BuildInfo info) {
@@ -148,7 +153,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	}
     	return null;
     }
-    private BuildInfo createBuildInfo(Run<?, ?> run, String color, String status, String urlPart, Job<?, ?> job) {
+    private BuildInfo createBuildInfo(Run<?, ?> run, String color, String underlineStyle, String status, String urlPart, Job<?, ?> job) {
     	if (run != null) {
 	    	String timeAgoString = getTimeAgoString(run.getTimeInMillis());
 	    	long buildTime = run.getTime().getTime();
@@ -160,7 +165,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
 	    		latest = job.getLastBuild();
 	    	}
 	    	BuildInfo build = new BuildInfo(
-	    			run, color, timeAgoString, buildTime, 
+	    			run, color, underlineStyle, timeAgoString, buildTime, 
 	    			status, urlPart, run.number == latest.number);
 	    	return build;
     	}

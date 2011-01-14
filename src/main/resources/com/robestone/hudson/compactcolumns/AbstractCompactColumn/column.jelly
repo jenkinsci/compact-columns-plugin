@@ -7,7 +7,7 @@
 					<st:nbsp/>&gt;<st:nbsp/>
 				</j:if>
 				<a href="${jobBaseUrl}${job.shortUrl}${build.urlPart}" 
-					style="color: ${build.color}; font-weight: ${build.fontWeight}"
+					style="color: ${build.color}; font-weight: ${build.fontWeight}; text-decoration:none; border-bottom: ${build.underlineStyle}"
 					tooltip="&lt;b&gt;&lt;u&gt;${%Build} #${build.run.number}${build.getLatestBuildString(request.locale)}&lt;/u&gt;&lt;/b&gt;
 						&lt;ul&gt;
 						&lt;li&gt;${build.getBuiltAt(request.locale)}&lt;/b&gt;&lt;/li&gt;

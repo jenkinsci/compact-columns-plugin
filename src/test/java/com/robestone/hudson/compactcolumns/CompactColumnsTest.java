@@ -44,7 +44,7 @@ public class CompactColumnsTest extends TestCase {
 	public void testNoBadLocale() {
 		Locale[] locales = Locale.getAvailableLocales();
 		for (Locale locale: locales) {
-			String s = AbstractCompactColumn.getBuildTimeString(1277416568304L, locale);
+			String s = AbstractStatusesColumn.getBuildTimeString(1277416568304L, locale);
 			assertNotNull(s);
 		}
 	}
@@ -56,7 +56,7 @@ public class CompactColumnsTest extends TestCase {
 		doTestLocalizeDate(time, Locale.CANADA, "4:56 PM, 24/06/2010");
 	}
 	private void doTestLocalizeDate(long time, Locale locale, String expect) {
-		String found = AbstractCompactColumn.getBuildTimeString(time, locale);
+		String found = AbstractStatusesColumn.getBuildTimeString(time, locale);
 		assertEquals(expect, found);
 	}
 	
@@ -112,7 +112,7 @@ public class CompactColumnsTest extends TestCase {
 	 * @param buildsSpec most recent build first
 	 * @param expectToShow most recent status first
 	 */
-	private void doTestBuilds(String buildsSpec, String expectToShow, AbstractCompactColumn col) {
+	private void doTestBuilds(String buildsSpec, String expectToShow, AbstractStatusesColumn col) {
 		TestJob job = new TestJob();
 		TestRun previous = null;
 		long time = 1000;

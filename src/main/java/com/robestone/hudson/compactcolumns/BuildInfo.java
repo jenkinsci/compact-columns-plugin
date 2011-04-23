@@ -67,7 +67,7 @@ public class BuildInfo implements Comparable<BuildInfo> {
 		return Messages._startedAgo(timeAgoString).toString(locale);
 	}
 	public String getBuiltAt(Locale locale) {
-		String time = AbstractCompactColumn.getBuildTimeString(buildTime, locale);
+		String time = AbstractStatusesColumn.getBuildTimeString(buildTime, locale);
 		return Messages._builtAt(time).toString(locale);
 	}
 	public String getLastedDuration(Locale locale) {

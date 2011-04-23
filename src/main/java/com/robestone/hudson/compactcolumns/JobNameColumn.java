@@ -5,7 +5,7 @@ import hudson.views.JobColumn;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import com.robestone.hudson.compactcolumns.AbstractCompactColumn.AbstractCompactColumnDescriptor;
+import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
 
 public class JobNameColumn extends JobColumn {
 

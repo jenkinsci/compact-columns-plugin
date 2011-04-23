@@ -27,7 +27,7 @@ import hudson.Extension;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class LastSuccessAndFailedColumn extends AbstractCompactColumn {
+public class LastSuccessAndFailedColumn extends AbstractStatusesColumn {
 	@DataBoundConstructor
 	public LastSuccessAndFailedColumn() {
 	}

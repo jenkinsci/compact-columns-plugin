@@ -27,7 +27,7 @@ import hudson.Extension;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class AllStatusesColumn extends AbstractCompactColumn {
+public class AllStatusesColumn extends AbstractStatusesColumn {
 	@DataBoundConstructor
 	public AllStatusesColumn() {
 	}

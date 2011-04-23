@@ -4,7 +4,7 @@ import hudson.Extension;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import com.robestone.hudson.compactcolumns.AbstractCompactColumn.AbstractCompactColumnDescriptor;
+import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
 
 public class JobNameColorColumn extends JobNameOptionsColumn {
 

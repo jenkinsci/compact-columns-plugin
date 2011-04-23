@@ -11,7 +11,7 @@ import hudson.views.JobColumn;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import com.robestone.hudson.compactcolumns.AbstractCompactColumn.AbstractCompactColumnDescriptor;
+import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
 
 public class JobNameOptionsColumn extends JobColumn {
 
@@ -45,25 +45,25 @@ public class JobNameOptionsColumn extends JobColumn {
 		String underline;
 		if (result == null) {
 			color = "grey";
-			underline = AbstractCompactColumn.OTHER_UNDERLINE_STYLE;
+			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		} else if (Result.ABORTED.equals(result)) {
 			color = "grey";
-			underline = AbstractCompactColumn.OTHER_UNDERLINE_STYLE;
+			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		} else if (Result.FAILURE.equals(result)) {
 			color = "red";
-			underline = AbstractCompactColumn.FAILED_UNDERLINE_STYLE;
+			underline = AbstractStatusesColumn.FAILED_UNDERLINE_STYLE;
 		} else if (Result.NOT_BUILT.equals(result)) {
 			color = "grey";
-			underline = AbstractCompactColumn.OTHER_UNDERLINE_STYLE;
+			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		} else if (Result.SUCCESS.equals(result)) {
 			color = "blue";
-			underline = AbstractCompactColumn.STABLE_UNDERLINE_STYLE;
+			underline = AbstractStatusesColumn.STABLE_UNDERLINE_STYLE;
 		} else if (Result.UNSTABLE.equals(result)) {
 			color = "orange";
-			underline = AbstractCompactColumn.UNSTABLE_UNDERLINE_STYLE;
+			underline = AbstractStatusesColumn.UNSTABLE_UNDERLINE_STYLE;
 		} else {
 			color = "grey";
-			underline = AbstractCompactColumn.OTHER_UNDERLINE_STYLE;
+			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		}
 		String style = "";
 		if (showColor) {
@@ -84,10 +84,10 @@ public class JobNameOptionsColumn extends JobColumn {
 			if (tip.length() > 0) {
 				tip += "<hr/>";
 			}
-			List<BuildInfo> builds = AbstractCompactColumn.getBuilds(job, false, false);
+			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, false, false);
 			if (!builds.isEmpty()) {
 				BuildInfo build = builds.get(0);
-				tip += AbstractCompactColumn.getBuildDescriptionToolTip(build, locale);
+				tip += AbstractStatusesColumn.getBuildDescriptionToolTip(build, locale);
 			}
 		}
 		return tip;

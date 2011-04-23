@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public abstract class AbstractCompactColumn extends ListViewColumn {
+public abstract class AbstractStatusesColumn extends ListViewColumn {
 
 	public static final String OTHER_UNDERLINE_STYLE = "1px dashed";
 	public static final String UNSTABLE_UNDERLINE_STYLE = "1px dashed";

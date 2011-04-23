@@ -69,10 +69,14 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	return getBuilds(job).isEmpty();
     }
     public List<BuildInfo> getBuilds(Job<?, ?> job) {
+    	return getBuilds(job, isFailedShownOnlyIfLast(), isUnstableShownOnlyIfLast());
+    }
+    public static List<BuildInfo> getBuilds(Job<?, ?> job, 
+    		boolean isFailedShownOnlyIfLast, boolean isUnstableShownOnlyIfLast) {
     	List<BuildInfo> builds = new ArrayList<BuildInfo>();
 
-    	addNonNull(builds, getLastFailedBuild(job));
-    	addNonNull(builds, getLastUnstableBuild(job));
+    	addNonNull(builds, getLastFailedBuild(job, isFailedShownOnlyIfLast));
+    	addNonNull(builds, getLastUnstableBuild(job, isUnstableShownOnlyIfLast));
     	addNonNull(builds, getLastStableBuild(job));
 
     	if (builds.isEmpty()) {
@@ -94,8 +98,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
      * @param onlyIfLastCompleted When the statuses aren't sorted, we only show the last failed
      * when it is also the latest completed build.
      */
-    public BuildInfo getLastFailedBuild(Job<?, ?> job) {
-    	boolean onlyIfLastCompleted = isFailedShownOnlyIfLast();
+    public static BuildInfo getLastFailedBuild(Job<?, ?> job, boolean onlyIfLastCompleted) {
     	Run<?, ?> lastFailedBuild = job.getLastFailedBuild();
     	Run<?, ?> lastCompletedBuild = job.getLastCompletedBuild();
     	if (lastFailedBuild == null) {
@@ -109,11 +112,11 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     abstract protected boolean isFailedShownOnlyIfLast();
     abstract protected boolean isUnstableShownOnlyIfLast();
 
-    public BuildInfo getLastStableBuild(Job<?, ?> job) {
+    public static BuildInfo getLastStableBuild(Job<?, ?> job) {
     	return createBuildInfo(job.getLastStableBuild(), "blue", STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job);
     }
 
-    public BuildInfo getLastUnstableBuild(Job<?, ?> job) {
+    public static BuildInfo getLastUnstableBuild(Job<?, ?> job, boolean isUnstableShownOnlyIfLast) {
     	Run<?, ?> lastUnstable = null;
     	Run<?, ?> latest = job.getLastBuild();
     	while (latest != null) {
@@ -129,7 +132,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
 
     	Run<?, ?> lastCompleted = job.getLastCompletedBuild();
     	boolean isLastCompleted = (lastCompleted != null && lastCompleted.number == lastUnstable.number);
-    	if (isUnstableShownOnlyIfLast() && !isLastCompleted) {
+    	if (isUnstableShownOnlyIfLast && !isLastCompleted) {
     		return null;
     	}
     	
@@ -138,12 +141,12 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	return createBuildInfo(lastUnstable, unstableColor, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job);
     }
 
-    protected void addNonNull(List<BuildInfo> builds, BuildInfo info) {
+    protected static void addNonNull(List<BuildInfo> builds, BuildInfo info) {
     	if (info != null) {
     		builds.add(info);
     	}
     }
-    private Run<?, ?> getLastAbortedBuild(Job<?, ?> job) {
+    private static Run<?, ?> getLastAbortedBuild(Job<?, ?> job) {
     	Run<?, ?> latest = job.getLastBuild();
     	while (latest != null) {
     		if (latest.getResult() == Result.ABORTED) {
@@ -153,7 +156,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	}
     	return null;
     }
-    private BuildInfo createBuildInfo(Run<?, ?> run, String color, String underlineStyle, String status, String urlPart, Job<?, ?> job) {
+    private static BuildInfo createBuildInfo(Run<?, ?> run, String color, String underlineStyle, String status, String urlPart, Job<?, ?> job) {
     	if (run != null) {
 	    	String timeAgoString = getTimeAgoString(run.getTimeInMillis());
 	    	long buildTime = run.getTime().getTime();
@@ -171,7 +174,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	}
     	return null;
     }
-    protected String getTimeAgoString(long timestamp) {
+    protected static String getTimeAgoString(long timestamp) {
     	long now = System.currentTimeMillis();
     	float diff = now - timestamp;
     	String stime = getShortTimestamp(diff);
@@ -213,7 +216,7 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
      * < 10 of anything = x.y of that (scale 1)
      * >= 10 of anything = x (scale 0)
      */
-    protected String getShortTimestamp(float time) {
+    protected static String getShortTimestamp(float time) {
     	String ts;
     	float number;
     	if (time >= ONE_YEAR_MS) {
@@ -239,8 +242,11 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     	}
     	return ts;
     }
-    
-    protected float getRoundedNumber(float number) {
+	public final String getToolTip(BuildInfo build, Locale locale) {
+		return getBuildDescriptionToolTip(build, locale);
+	}
+
+    protected static float getRoundedNumber(float number) {
     	int scale;
     	if (number >= 10) {
     		scale = 0;
@@ -258,6 +264,29 @@ public abstract class AbstractCompactColumn extends ListViewColumn {
     }
     public static final String getAbortedMessage() {
     	return hudson.model.Messages.BallColor_Aborted();
+    }
+	public static final String getBuildDescriptionToolTip(BuildInfo build, Locale locale) {
+    	StringBuilder buf = new StringBuilder();
+    	buf.append("<b><u>");
+    	buf.append(Messages.BuildNumber());
+    	buf.append(build.getRun().number);
+    	buf.append(build.getLatestBuildString(locale));
+    	buf.append("</u></b>\n");
+    	buf.append("<ul>\n");
+    	buf.append("<li>");
+    	buf.append(build.getBuiltAt(locale));
+    	buf.append("</li>\n");
+    	buf.append("<li>");
+    	buf.append(build.getStartedAgo(locale));
+    	buf.append("</li>\n");
+    	buf.append("<li>");
+    	buf.append(build.getLastedDuration(locale));
+    	buf.append("</li>\n");
+    	buf.append("<li><b>");
+    	buf.append(build.getStatus());
+    	buf.append("</b></li>\n");
+    	buf.append("</ul>");
+    	return buf.toString();
     }
     public static final String getStableMessage() {
     	String message = hudson.model.Messages.Run_Summary_Stable();

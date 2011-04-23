@@ -8,13 +8,7 @@
 				</j:if>
 				<a href="${jobBaseUrl}${job.shortUrl}${build.urlPart}" 
 					style="color: ${build.color}; font-weight: ${build.fontWeight}; text-decoration:none; border-bottom: ${build.underlineStyle}"
-					tooltip="&lt;b&gt;&lt;u&gt;${%Build} #${build.run.number}${build.getLatestBuildString(request.locale)}&lt;/u&gt;&lt;/b&gt;
-						&lt;ul&gt;
-						&lt;li&gt;${build.getBuiltAt(request.locale)}&lt;/b&gt;&lt;/li&gt;
-						&lt;li&gt;${build.getStartedAgo(request.locale)}&lt;/li&gt;
-						&lt;li&gt;${build.getLastedDuration(request.locale)}&lt;/li&gt;
-						&lt;li&gt;&lt;b&gt;${build.status}&lt;/li&gt;
-						&lt;/ul&gt;"
+					tooltip="${it.getToolTip(build, request.locale)}"
 				>${build.timeAgoString}</a>
 			</j:forEach>
 		</j:when>

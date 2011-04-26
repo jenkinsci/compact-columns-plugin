@@ -23,32 +23,26 @@
  */
 package com.robestone.hudson.compactcolumns;
 
-import hudson.Extension;
-import org.kohsuke.stapler.DataBoundConstructor;
+import hudson.views.ListViewColumn;
 
 /**
  * @author jacob robertson
  */
-public class AllStatusesColumn extends AbstractStatusesColumn {
-	@DataBoundConstructor
-	public AllStatusesColumn() {
-		super(null);
+public abstract class AbstractCompactColumn extends ListViewColumn {
+
+	static final String colorblindHint_Underline = "underlinehint";
+	static final String colorblindHint_none = "nohint";
+	
+	private String colorblindHint;
+	
+	public AbstractCompactColumn(String colorblindHint) {
+		this.colorblindHint = colorblindHint;
 	}
-	@Override
-	protected boolean isFailedShownOnlyIfLast() {
-		return false;
+	public String getColorblindHint() {
+		return colorblindHint;
 	}
-	@Override
-	protected boolean isUnstableShownOnlyIfLast() {
-		return false;
+	public boolean isShowColorblindUnderlineHint() {
+		return colorblindHint_Underline.equals(colorblindHint);
 	}
 
-	@Extension
-	public static class AllStatusesColumnDescriptor extends
-			AbstractCompactColumnDescriptor {
-		@Override
-		public String getDisplayName() {
-			return Messages.Compact_Column_All_Statuses();
-		}
-	}
 }

@@ -4,6 +4,9 @@ import java.util.Locale;
 
 import hudson.model.Run;
 
+/**
+ * @author jacob robertson
+ */
 public class BuildInfo implements Comparable<BuildInfo> {
 
 	private Run<?, ?> run;

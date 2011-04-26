@@ -7,6 +7,9 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
 
+/**
+ * @author jacob robertson
+ */
 public class JobNameColumn extends JobColumn {
 
 	@DataBoundConstructor

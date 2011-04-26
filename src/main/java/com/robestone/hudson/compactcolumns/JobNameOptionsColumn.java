@@ -1,35 +1,33 @@
 package com.robestone.hudson.compactcolumns;
 
+import hudson.Extension;
+import hudson.model.Result;
+import hudson.model.Job;
+import hudson.model.Run;
+
 import java.util.List;
 import java.util.Locale;
-
-import hudson.Extension;
-import hudson.model.Job;
-import hudson.model.Result;
-import hudson.model.Run;
-import hudson.views.JobColumn;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
 
-public class JobNameOptionsColumn extends JobColumn {
+/**
+ * @author jacob robertson
+ */
+public class JobNameOptionsColumn extends AbstractCompactColumn {
 
-	private static final String colorblindHint_Underline = "underlinehint";
-	static final String colorblindHint_none = "nohint";
-	
 	private boolean showColor;
 	private boolean showDescription;
 	private boolean showLastBuild;
-	private String colorblindHint;
 	
 	@DataBoundConstructor
 	public JobNameOptionsColumn(boolean showColor, boolean showDescription,
 			boolean showLastBuild, String colorblindHint) {
+		super(colorblindHint);
 		this.showColor = showColor;
 		this.showDescription = showDescription;
 		this.showLastBuild = showLastBuild;
-		this.colorblindHint = colorblindHint;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -100,12 +98,6 @@ public class JobNameOptionsColumn extends JobColumn {
 	}
 	public boolean isShowLastBuild() {
 		return showLastBuild;
-	}
-	public String getColorblindHint() {
-		return colorblindHint;
-	}
-	public boolean isShowColorblindUnderlineHint() {
-		return colorblindHint_Underline.equals(colorblindHint);
 	}
 
 	@Extension

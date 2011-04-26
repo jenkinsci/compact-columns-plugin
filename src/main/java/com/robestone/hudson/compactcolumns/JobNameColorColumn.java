@@ -6,11 +6,14 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
 
+/**
+ * @author jacob robertson
+ */
 public class JobNameColorColumn extends JobNameOptionsColumn {
 
 	@DataBoundConstructor
     public JobNameColorColumn() {
-		super(true, true, false, colorblindHint_none);
+		super(true, true, false, null);
     }
 
     @Extension

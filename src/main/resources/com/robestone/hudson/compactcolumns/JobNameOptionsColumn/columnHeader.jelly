@@ -1,0 +1,3 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+<st:include page="columnHeader.jelly" class="hudson.views.JobColumn" optional="false"/>
+</j:jelly>

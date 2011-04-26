@@ -39,8 +39,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
-public abstract class AbstractStatusesColumn extends ListViewColumn {
+/**
+ * @author jacob robertson
+ */
+public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 
 	public static final String OTHER_UNDERLINE_STYLE = "1px dashed";
 	public static final String UNSTABLE_UNDERLINE_STYLE = "1px dashed";
@@ -55,6 +57,10 @@ public abstract class AbstractStatusesColumn extends ListViewColumn {
     private static final long ONE_MONTH_MS = 30 * ONE_DAY_MS;
     private static final long ONE_YEAR_MS = 365 * ONE_DAY_MS;
 
+    public AbstractStatusesColumn(String colorblindHint) {
+    	super(colorblindHint);
+    }
+    
     public String getColumnSortData(Job<?, ?> job) {
     	List<BuildInfo> builds = getBuilds(job);
     	if (builds.isEmpty()) {

@@ -6,8 +6,8 @@
 	    <f:checkbox name="showDescription" field="showDescription"/> ${%Show description in tool-tip}<br/>
 	    <f:checkbox name="showLastBuild" field="showLastBuild"/> ${%Show last build status in tool-tip}<br/>
 	    <select name="colorblindHint">
-	      <f:option value="nohint" selected="${it.colorblindHint == 'nohint'}">${%No color blind hint}</f:option>
-	      <f:option value="underlinehint" selected="${it.colorblindHint == 'underlinehint'}">${%Use underline color blind hint}</f:option>
+	      <f:option value="nohint" selected="${instance.colorblindHint == 'nohint'}">${%No color blind hint}</f:option>
+	      <f:option value="underlinehint" selected="${instance.colorblindHint == 'underlinehint'}">${%Use underline color blind hint}</f:option>
 	    </select>
 	</f:entry>
 </j:jelly>

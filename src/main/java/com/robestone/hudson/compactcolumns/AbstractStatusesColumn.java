@@ -24,10 +24,9 @@
 package com.robestone.hudson.compactcolumns;
 
 
-import hudson.model.Job;
 import hudson.model.Result;
+import hudson.model.Job;
 import hudson.model.Run;
-import hudson.views.ListViewColumn;
 import hudson.views.ListViewColumnDescriptor;
 
 import java.math.BigDecimal;
@@ -75,18 +74,22 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	return getBuilds(job).isEmpty();
     }
     public List<BuildInfo> getBuilds(Job<?, ?> job) {
-    	return getBuilds(job, isFailedShownOnlyIfLast(), isUnstableShownOnlyIfLast());
+    	return getBuilds(job, isFailedShownOnlyIfLast(), isUnstableShownOnlyIfLast(), isOnlyShowLastStatus(), isShowColorblindUnderlineHint());
     }
     public static List<BuildInfo> getBuilds(Job<?, ?> job, 
-    		boolean isFailedShownOnlyIfLast, boolean isUnstableShownOnlyIfLast) {
+    		boolean isFailedShownOnlyIfLast, boolean isUnstableShownOnlyIfLast, boolean isOnlyShowLastStatus, boolean isShowColorblindUnderlineHint) {
     	List<BuildInfo> builds = new ArrayList<BuildInfo>();
 
-    	addNonNull(builds, getLastFailedBuild(job, isFailedShownOnlyIfLast));
-    	addNonNull(builds, getLastUnstableBuild(job, isUnstableShownOnlyIfLast));
-    	addNonNull(builds, getLastStableBuild(job));
+    	addNonNull(builds, getLastFailedBuild(job, isFailedShownOnlyIfLast, isShowColorblindUnderlineHint));
+    	if (builds.isEmpty() || !isOnlyShowLastStatus) {
+	    	addNonNull(builds, getLastUnstableBuild(job, isUnstableShownOnlyIfLast, isShowColorblindUnderlineHint));
+    	}
+    	if (builds.isEmpty() || !isOnlyShowLastStatus) {
+	    	addNonNull(builds, getLastStableBuild(job, isShowColorblindUnderlineHint));
+    	}
 
     	if (builds.isEmpty()) {
-        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job);
+        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job, isShowColorblindUnderlineHint);
         	addNonNull(builds, aborted);
     	}
     	
@@ -104,25 +107,28 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
      * @param onlyIfLastCompleted When the statuses aren't sorted, we only show the last failed
      * when it is also the latest completed build.
      */
-    public static BuildInfo getLastFailedBuild(Job<?, ?> job, boolean onlyIfLastCompleted) {
+    public static BuildInfo getLastFailedBuild(Job<?, ?> job, boolean onlyIfLastCompleted, boolean isShowColorblindUnderlineHint) {
     	Run<?, ?> lastFailedBuild = job.getLastFailedBuild();
     	Run<?, ?> lastCompletedBuild = job.getLastCompletedBuild();
     	if (lastFailedBuild == null) {
     		return null;
     	} else if (!onlyIfLastCompleted || (lastCompletedBuild.number == lastFailedBuild.number)) {
-        	return createBuildInfo(job.getLastFailedBuild(), "red", FAILED_UNDERLINE_STYLE, getFailedMessage(), "lastFailedBuild", job);
+        	return createBuildInfo(job.getLastFailedBuild(), "red", FAILED_UNDERLINE_STYLE, getFailedMessage(), "lastFailedBuild", job, isShowColorblindUnderlineHint);
     	} else {
     		return null;
     	}
     }
     abstract protected boolean isFailedShownOnlyIfLast();
     abstract protected boolean isUnstableShownOnlyIfLast();
+	public boolean isOnlyShowLastStatus() {
+		return false;
+	}
 
-    public static BuildInfo getLastStableBuild(Job<?, ?> job) {
-    	return createBuildInfo(job.getLastStableBuild(), "blue", STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job);
+    public static BuildInfo getLastStableBuild(Job<?, ?> job, boolean isShowColorblindUnderlineHint) {
+    	return createBuildInfo(job.getLastStableBuild(), "blue", STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job, isShowColorblindUnderlineHint);
     }
 
-    public static BuildInfo getLastUnstableBuild(Job<?, ?> job, boolean isUnstableShownOnlyIfLast) {
+    public static BuildInfo getLastUnstableBuild(Job<?, ?> job, boolean isUnstableShownOnlyIfLast, boolean isShowColorblindUnderlineHint) {
     	Run<?, ?> lastUnstable = null;
     	Run<?, ?> latest = job.getLastBuild();
     	while (latest != null) {
@@ -144,10 +150,10 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	
 		String unstableColor = "orange"; // best color that is "yellow" but visible too
 		
-    	return createBuildInfo(lastUnstable, unstableColor, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job);
+    	return createBuildInfo(lastUnstable, unstableColor, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job, isShowColorblindUnderlineHint);
     }
 
-    protected static void addNonNull(List<BuildInfo> builds, BuildInfo info) {
+    private static void addNonNull(List<BuildInfo> builds, BuildInfo info) {
     	if (info != null) {
     		builds.add(info);
     	}
@@ -162,7 +168,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	}
     	return null;
     }
-    private static BuildInfo createBuildInfo(Run<?, ?> run, String color, String underlineStyle, String status, String urlPart, Job<?, ?> job) {
+    private static BuildInfo createBuildInfo(Run<?, ?> run, String color, String underlineStyle, String status, String urlPart, Job<?, ?> job, boolean isShowColorblindUnderlineHint) {
     	if (run != null) {
 	    	String timeAgoString = getTimeAgoString(run.getTimeInMillis());
 	    	long buildTime = run.getTime().getTime();
@@ -172,6 +178,9 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 	    	Run<?, ?> latest = job.getLastCompletedBuild();
 	    	if (latest == null) {
 	    		latest = job.getLastBuild();
+	    	}
+	    	if (!isShowColorblindUnderlineHint) {
+	    		underlineStyle = null;
 	    	}
 	    	BuildInfo build = new BuildInfo(
 	    			run, color, underlineStyle, timeAgoString, buildTime, 

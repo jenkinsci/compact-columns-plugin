@@ -5,9 +5,9 @@
 	<j:invokeStatic var="message_stable" className="com.robestone.hudson.compactcolumns.AbstractStatusesColumn" method="getStableMessage"/>
 
     <th tooltip=
-    "&lt;span style='text-decoration: none; color: red; border-bottom: 1px solid'&gt;${message_failed}&lt;/span&gt;;
-     &lt;span style='text-decoration: none; color: orange; border-bottom: 1px dashed'&gt;${message_unstable}&lt;/span&gt;; 
-     &lt;span style='text-decoration: none; color: blue; border-bottom: 0px solid'&gt;${message_stable}&lt;/span&gt;
+    "&lt;span style='text-decoration: underline; color: red;'&gt;${message_failed}&lt;/span&gt;;
+     &lt;span style='text-decoration: underline; color: orange;'&gt;${message_unstable}&lt;/span&gt;; 
+     &lt;span style='text-decoration: underline; color: blue;'&gt;${message_stable}&lt;/span&gt;
     &lt;br/&gt;
 	&lt;b&gt;${%More Recent}&lt;/b&gt; &gt; ${%Less Recent}
 	"

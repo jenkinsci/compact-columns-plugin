@@ -30,10 +30,14 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author jacob robertson
  */
 public class AllStatusesColumn extends AbstractStatusesColumn {
+	
+	private boolean onlyShowLastStatus;
+	
 	@DataBoundConstructor
-	public AllStatusesColumn() {
-		super(null);
-	}
+	public AllStatusesColumn(String colorblindHint, boolean onlyShowLastStatus) {
+    	super(colorblindHint);
+    	this.onlyShowLastStatus = onlyShowLastStatus;
+    }
 	@Override
 	protected boolean isFailedShownOnlyIfLast() {
 		return false;
@@ -42,13 +46,15 @@ public class AllStatusesColumn extends AbstractStatusesColumn {
 	protected boolean isUnstableShownOnlyIfLast() {
 		return false;
 	}
-
+	public boolean isOnlyShowLastStatus() {
+		return onlyShowLastStatus;
+	}
 	@Extension
 	public static class AllStatusesColumnDescriptor extends
 			AbstractCompactColumnDescriptor {
 		@Override
 		public String getDisplayName() {
-			return Messages.Compact_Column_All_Statuses();
+			return Messages.Compact_Column_Statuses_w_Options();
 		}
 	}
 }

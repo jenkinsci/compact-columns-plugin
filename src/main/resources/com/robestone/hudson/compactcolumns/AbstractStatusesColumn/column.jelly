@@ -7,7 +7,7 @@
 					<st:nbsp/>&gt;<st:nbsp/>
 				</j:if>
 				<a href="${jobBaseUrl}${job.shortUrl}${build.urlPart}" 
-					style="color: ${build.color}; font-weight: ${build.fontWeight}; text-decoration:none; border-bottom: ${build.underlineStyle}"
+					style="color: ${build.color}; font-weight: ${build.fontWeight}; text-decoration: ${build.textDecoration}; border-bottom: ${build.underlineStyle}"
 					tooltip="${it.getToolTip(build, request.locale)}"
 				>${build.timeAgoString}</a>
 			</j:forEach>

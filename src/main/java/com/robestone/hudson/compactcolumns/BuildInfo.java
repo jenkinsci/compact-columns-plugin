@@ -84,6 +84,9 @@ public class BuildInfo implements Comparable<BuildInfo> {
     	}
 	}
 	public String getUnderlineStyle() {
+		if (underlineStyle == null) {
+			return "0px";
+		}
 		return underlineStyle;
 	}
 	public void setFirst(boolean first) {
@@ -97,5 +100,12 @@ public class BuildInfo implements Comparable<BuildInfo> {
 	 */
 	public int compareTo(BuildInfo that) {
 		return new Integer(that.run.number).compareTo(this.run.number);
+	}
+	public String getTextDecoration() {
+		if (underlineStyle == null) {
+			return "underline";
+		} else {
+			return "none";
+		}
 	}
 }

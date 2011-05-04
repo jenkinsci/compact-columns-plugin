@@ -36,8 +36,6 @@ import junit.framework.TestCase;
 
 public class CompactColumnsTest extends TestCase {
 
-	private LastSuccessAndFailedColumn col = new LastSuccessAndFailedColumn();
-	
 	/**
 	 * Shows that all locale handling will be okay.
 	 */
@@ -82,7 +80,7 @@ public class CompactColumnsTest extends TestCase {
 	}
 	
 	private void doTestTime(float diff, String expect) {
-		String found = col.getShortTimestamp(diff);
+		String found = AbstractStatusesColumn.getShortTimestamp(diff);
 		assertEquals(expect, found);
 	}
 	public void testGetBuilds() {
@@ -105,7 +103,7 @@ public class CompactColumnsTest extends TestCase {
 			String expectForLastStableAndUnstable, String expectForLastSuccessAndFailed, String expectForAllStatuses) {
 		doTestBuilds(buildsSpec, expectForLastStableAndUnstable, new LastStableAndUnstableColumn());
 		doTestBuilds(buildsSpec, expectForLastSuccessAndFailed, new LastSuccessAndFailedColumn());
-		doTestBuilds(buildsSpec, expectForAllStatuses, new AllStatusesColumn());
+		doTestBuilds(buildsSpec, expectForAllStatuses, new AllStatusesColumn(null, false));
 	}
 	
 	/**
@@ -146,7 +144,7 @@ public class CompactColumnsTest extends TestCase {
 			}
 		}
 	}
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static class TestRun extends Run {
 		public TestRun(Job job, long timestamp, Result result) {
 			super(job, timestamp);
@@ -165,7 +163,7 @@ public class CompactColumnsTest extends TestCase {
 			return "tj:" + number;
 		}
 	}
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static class TestJob extends Job {
 		private SortedMap runs = new TreeMap();
 		public TestJob() {

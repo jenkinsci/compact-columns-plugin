@@ -82,7 +82,7 @@ public class JobNameColorColumn extends AbstractCompactColumn {
 			if (tip.length() > 0) {
 				tip += "<hr/>";
 			}
-			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, false, false);
+			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, false, false, true, isShowColorblindUnderlineHint());
 			if (!builds.isEmpty()) {
 				BuildInfo build = builds.get(0);
 				tip += AbstractStatusesColumn.getBuildDescriptionToolTip(build, locale);

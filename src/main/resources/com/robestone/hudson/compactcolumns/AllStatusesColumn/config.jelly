@@ -2,10 +2,17 @@
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
 	xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
 	<f:entry>
-	    <f:checkbox name="onlyShowLastStatus" field="onlyShowLastStatus"/> ${%Only show the last status}<br/>
+	    <f:checkbox name="onlyShowLastStatus" field="onlyShowLastStatus"/> ${%Only show the last status}
+		<br/>
+		${%Hide additional statuses when older than}
+		<st:nbsp />
+		<input type="text" name="hideDays" value="${instance.hideDays}" size="10" maxlength="10" />
+		<st:nbsp />
+		${%days}
+	    <br/>
 	    <select name="colorblindHint">
 	      <f:option value="nohint" selected="${instance.colorblindHint == 'nohint'}">${%No color blind hints}</f:option>
 	      <f:option value="underlinehint" selected="${instance.colorblindHint == 'underlinehint'}">${%Use underline color blind hints}</f:option>
-	    </select>
+		</select>
 	</f:entry>
 </j:jelly>

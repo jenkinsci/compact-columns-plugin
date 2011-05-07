@@ -59,7 +59,6 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     public AbstractStatusesColumn(String colorblindHint) {
     	super(colorblindHint);
     }
-    
     public String getColumnSortData(Job<?, ?> job) {
     	List<BuildInfo> builds = getBuilds(job);
     	if (builds.isEmpty()) {
@@ -68,16 +67,23 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	BuildInfo latest = builds.get(0);
     	return String.valueOf(latest.getBuildTime());
     }
-    
+    public int getHideDays() {
+		return 0;
+	}
     public boolean isBuildsEmpty(Job<?, ?> job) {
     	// TODO -- make much more efficient
     	return getBuilds(job).isEmpty();
     }
     public List<BuildInfo> getBuilds(Job<?, ?> job) {
-    	return getBuilds(job, isFailedShownOnlyIfLast(), isUnstableShownOnlyIfLast(), isOnlyShowLastStatus(), isShowColorblindUnderlineHint());
+    	return getBuilds(
+    			job, 
+    			isFailedShownOnlyIfLast(), isUnstableShownOnlyIfLast(), 
+    			isOnlyShowLastStatus(), isShowColorblindUnderlineHint(),
+    			getHideDays());
     }
     public static List<BuildInfo> getBuilds(Job<?, ?> job, 
-    		boolean isFailedShownOnlyIfLast, boolean isUnstableShownOnlyIfLast, boolean isOnlyShowLastStatus, boolean isShowColorblindUnderlineHint) {
+    		boolean isFailedShownOnlyIfLast, boolean isUnstableShownOnlyIfLast, 
+    		boolean isOnlyShowLastStatus, boolean isShowColorblindUnderlineHint, int hideDays) {
     	List<BuildInfo> builds = new ArrayList<BuildInfo>();
 
     	addNonNull(builds, getLastFailedBuild(job, isFailedShownOnlyIfLast, isShowColorblindUnderlineHint));
@@ -94,7 +100,25 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	}
     	
    		Collections.sort(builds);
+
+   		List<BuildInfo> filtered = new ArrayList<BuildInfo>();
+   		long now = System.currentTimeMillis();
+   		long maxDiff = hideDays * ONE_DAY_MS;
     	
+    	for (int i = 0; i < builds.size(); i++) {
+			BuildInfo info = builds.get(i);
+			boolean show = true;
+			if (hideDays > 0) {
+				long time = info.getBuildTime();
+				long diff = now - time;
+				show = (diff <= maxDiff);
+			}
+			if (filtered.isEmpty() || show) {
+				filtered.add(info);
+			}
+		}
+
+    	builds = filtered;
     	for (int i = 0; i < builds.size(); i++) {
 			BuildInfo info = builds.get(i);
 			info.setFirst(i == 0);

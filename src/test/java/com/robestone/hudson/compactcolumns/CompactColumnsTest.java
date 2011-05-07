@@ -103,7 +103,7 @@ public class CompactColumnsTest extends TestCase {
 			String expectForLastStableAndUnstable, String expectForLastSuccessAndFailed, String expectForAllStatuses) {
 		doTestBuilds(buildsSpec, expectForLastStableAndUnstable, new LastStableAndUnstableColumn());
 		doTestBuilds(buildsSpec, expectForLastSuccessAndFailed, new LastSuccessAndFailedColumn());
-		doTestBuilds(buildsSpec, expectForAllStatuses, new AllStatusesColumn(null, false));
+		doTestBuilds(buildsSpec, expectForAllStatuses, new AllStatusesColumn(null, false, 0));
 	}
 	
 	/**

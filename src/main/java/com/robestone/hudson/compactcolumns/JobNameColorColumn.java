@@ -82,7 +82,7 @@ public class JobNameColorColumn extends AbstractCompactColumn {
 			if (tip.length() > 0) {
 				tip += "<hr/>";
 			}
-			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, false, false, true, isShowColorblindUnderlineHint());
+			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, false, false, true, isShowColorblindUnderlineHint(), 0);
 			if (!builds.isEmpty()) {
 				BuildInfo build = builds.get(0);
 				tip += AbstractStatusesColumn.getBuildDescriptionToolTip(build, locale);
@@ -105,6 +105,10 @@ public class JobNameColorColumn extends AbstractCompactColumn {
         @Override
         public String getDisplayName() {
             return Messages.Compact_Column_Job_Name_w_Options();
+        }
+        @Override
+        public String getHelpFile() {
+            return "/plugin/compact-columns/job-name-color-column.html";
         }
     }
 }

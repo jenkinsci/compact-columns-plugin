@@ -32,12 +32,17 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class AllStatusesColumn extends AbstractStatusesColumn {
 	
 	private boolean onlyShowLastStatus;
-	
+    private int hideDays;
+
 	@DataBoundConstructor
-	public AllStatusesColumn(String colorblindHint, boolean onlyShowLastStatus) {
+	public AllStatusesColumn(String colorblindHint, boolean onlyShowLastStatus, int hideDays) {
     	super(colorblindHint);
     	this.onlyShowLastStatus = onlyShowLastStatus;
+    	this.hideDays = hideDays;
     }
+    public int getHideDays() {
+		return hideDays;
+	}
 	@Override
 	protected boolean isFailedShownOnlyIfLast() {
 		return false;
@@ -56,5 +61,9 @@ public class AllStatusesColumn extends AbstractStatusesColumn {
 		public String getDisplayName() {
 			return Messages.Compact_Column_Statuses_w_Options();
 		}
+		@Override
+        public String getHelpFile() {
+            return "/plugin/compact-columns/all-statuses-column.html";
+        }
 	}
 }

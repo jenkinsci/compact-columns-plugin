@@ -87,12 +87,8 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	List<BuildInfo> builds = new ArrayList<BuildInfo>();
 
     	addNonNull(builds, getLastFailedBuild(job, isFailedShownOnlyIfLast, isShowColorblindUnderlineHint));
-    	if (builds.isEmpty() || !isOnlyShowLastStatus) {
-	    	addNonNull(builds, getLastUnstableBuild(job, isUnstableShownOnlyIfLast, isShowColorblindUnderlineHint));
-    	}
-    	if (builds.isEmpty() || !isOnlyShowLastStatus) {
-	    	addNonNull(builds, getLastStableBuild(job, isShowColorblindUnderlineHint));
-    	}
+	    addNonNull(builds, getLastUnstableBuild(job, isUnstableShownOnlyIfLast, isShowColorblindUnderlineHint));
+	    addNonNull(builds, getLastStableBuild(job, isShowColorblindUnderlineHint));
 
     	if (builds.isEmpty()) {
         	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job, isShowColorblindUnderlineHint);
@@ -115,6 +111,9 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 			}
 			if (filtered.isEmpty() || show) {
 				filtered.add(info);
+				if (isOnlyShowLastStatus) {
+					break;
+				}
 			}
 		}
 

@@ -1,13 +1,14 @@
 package com.robestone.hudson.compactcolumns;
 
 import hudson.Extension;
-import hudson.model.Result;
 import hudson.model.Job;
+import hudson.model.Result;
 import hudson.model.Run;
 
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
@@ -42,25 +43,25 @@ public class JobNameColorColumn extends AbstractCompactColumn {
 		String color;
 		String underline;
 		if (result == null) {
-			color = "grey";
+			color = BuildInfo.OTHER_COLOR;
 			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		} else if (Result.ABORTED.equals(result)) {
-			color = "grey";
+			color = BuildInfo.OTHER_COLOR;
 			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		} else if (Result.FAILURE.equals(result)) {
-			color = "red";
+			color = BuildInfo.FAILED_COLOR;
 			underline = AbstractStatusesColumn.FAILED_UNDERLINE_STYLE;
 		} else if (Result.NOT_BUILT.equals(result)) {
-			color = "grey";
+			color = BuildInfo.OTHER_COLOR;
 			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		} else if (Result.SUCCESS.equals(result)) {
-			color = "blue";
+			color = BuildInfo.getStableColorString();
 			underline = AbstractStatusesColumn.STABLE_UNDERLINE_STYLE;
 		} else if (Result.UNSTABLE.equals(result)) {
-			color = "orange";
+			color = BuildInfo.UNSTABLE_COLOR;
 			underline = AbstractStatusesColumn.UNSTABLE_UNDERLINE_STYLE;
 		} else {
-			color = "grey";
+			color = BuildInfo.OTHER_COLOR;
 			underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
 		}
 		String style = "";
@@ -74,21 +75,27 @@ public class JobNameColorColumn extends AbstractCompactColumn {
 	}
 	@SuppressWarnings("rawtypes")
 	public String getToolTip(Job job, Locale locale) {
-		String tip = "";
+		StringBuilder tip = new StringBuilder();
 		if (showDescription) {
-			tip += job.getDescription();
+			String desc = job.getDescription();
+			if (!StringUtils.isEmpty(desc)) {
+				tip.append(desc);
+			}
 		}
 		if (showLastBuild) {
-			if (tip.length() > 0) {
-				tip += "<hr/>";
-			}
 			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, false, false, true, isShowColorblindUnderlineHint(), 0);
 			if (!builds.isEmpty()) {
 				BuildInfo build = builds.get(0);
-				tip += AbstractStatusesColumn.getBuildDescriptionToolTip(build, locale);
+				String desc = AbstractStatusesColumn.getBuildDescriptionToolTip(build, locale);
+				if (!StringUtils.isEmpty(desc)) {
+					if (tip.length() > 0) {
+						tip.append("<hr/>");
+					}
+					tip.append(desc);
+				}
 			}
 		}
-		return tip;
+		return tip.toString();
 	}
     public boolean isShowColor() {
 		return showColor;

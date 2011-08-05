@@ -24,8 +24,8 @@
 package com.robestone.hudson.compactcolumns;
 
 
-import hudson.model.Result;
 import hudson.model.Job;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.views.ListViewColumnDescriptor;
 
@@ -91,7 +91,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 	    addNonNull(builds, getLastStableBuild(job, isShowColorblindUnderlineHint));
 
     	if (builds.isEmpty()) {
-        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), "gray", OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job, isShowColorblindUnderlineHint);
+        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), BuildInfo.OTHER_COLOR, OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job, isShowColorblindUnderlineHint);
         	addNonNull(builds, aborted);
     	}
     	
@@ -136,7 +136,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	if (lastFailedBuild == null) {
     		return null;
     	} else if (!onlyIfLastCompleted || (lastCompletedBuild.number == lastFailedBuild.number)) {
-        	return createBuildInfo(job.getLastFailedBuild(), "red", FAILED_UNDERLINE_STYLE, getFailedMessage(), "lastFailedBuild", job, isShowColorblindUnderlineHint);
+        	return createBuildInfo(job.getLastFailedBuild(), BuildInfo.FAILED_COLOR, FAILED_UNDERLINE_STYLE, getFailedMessage(), "lastFailedBuild", job, isShowColorblindUnderlineHint);
     	} else {
     		return null;
     	}
@@ -148,7 +148,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 	}
 
     public static BuildInfo getLastStableBuild(Job<?, ?> job, boolean isShowColorblindUnderlineHint) {
-    	return createBuildInfo(job.getLastStableBuild(), "blue", STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job, isShowColorblindUnderlineHint);
+    	return createBuildInfo(job.getLastStableBuild(), BuildInfo.getStableColorString(), STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job, isShowColorblindUnderlineHint);
     }
 
     public static BuildInfo getLastUnstableBuild(Job<?, ?> job, boolean isUnstableShownOnlyIfLast, boolean isShowColorblindUnderlineHint) {
@@ -171,9 +171,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     		return null;
     	}
     	
-		String unstableColor = "orange"; // best color that is "yellow" but visible too
-		
-    	return createBuildInfo(lastUnstable, unstableColor, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job, isShowColorblindUnderlineHint);
+    	return createBuildInfo(lastUnstable, BuildInfo.UNSTABLE_COLOR, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job, isShowColorblindUnderlineHint);
     }
 
     private static void addNonNull(List<BuildInfo> builds, BuildInfo info) {

@@ -26,7 +26,10 @@ package com.robestone.hudson.compactcolumns;
 import hudson.model.Job;
 import hudson.model.Result;
 import hudson.model.Run;
+import hudson.util.ColorPalette;
 
+import java.awt.Color;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 import java.util.SortedMap;
@@ -143,6 +146,22 @@ public class CompactColumnsTest extends TestCase {
 				case 'A': assertEquals("Aborted", build.getStatus()); break;
 			}
 		}
+	}
+	public void testStableColor() throws Exception {
+		assertEquals(Color.BLUE, BuildInfo.getStableColor());
+		assertFalse(ColorPalette.BLUE.equals(BuildInfo.getStableColor()));
+	
+        Field colorValue = Color.class.getDeclaredField("value");
+        colorValue.setAccessible(true);
+        colorValue.setInt(ColorPalette.BLUE, new Color(172, 218, 0).getRGB());
+
+		assertEquals(ColorPalette.BLUE, BuildInfo.getStableColor());
+		assertFalse(Color.BLUE.equals(BuildInfo.getStableColor()));
+	}
+	public void testColorString() {
+		assertEquals("#0000ff", BuildInfo.getStableColorString());
+		assertEquals("#ef2929", BuildInfo.FAILED_COLOR);
+		assertEquals("#000303", BuildInfo.toColorString(new Color(0, 3, 3)));
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static class TestRun extends Run {

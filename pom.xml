@@ -9,7 +9,7 @@
 
 	<artifactId>compact-columns</artifactId>
 	<packaging>hpi</packaging>
-	<version>1.8</version>
+	<version>1.9-SNAPSHOT</version>
 	<name>Compact Columns</name>
 
 	<description>
@@ -27,9 +27,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:svn:https://svn.jenkins-ci.org/tags/compact-columns-1.8</connection>
-		<developerConnection>scm:svn:https://svn.jenkins-ci.org/tags/compact-columns-1.8</developerConnection>
-		<url>https://svn.jenkins-ci.org/tags/compact-columns-1.8</url>
+		<connection>scm:svn:https://svn.jenkins-ci.org/trunk/hudson/plugins/compact-columns</connection>
+		<developerConnection>scm:svn:https://svn.jenkins-ci.org/trunk/hudson/plugins/compact-columns</developerConnection>
+		<url>https://svn.jenkins-ci.org/trunk/hudson/plugins/compact-columns</url>
 	</scm>
 
 	<build>

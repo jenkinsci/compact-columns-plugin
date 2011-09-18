@@ -2,7 +2,7 @@
 	<td data="${it.getColumnSortData(job)}">
 		<j:choose>
 		<j:when test="${!it.isBuildsEmpty(job)}">
-      		<j:forEach var="build" items="${it.getBuilds(job)}">
+      		<j:forEach var="build" items="${it.getBuilds(job, request.locale)}">
 				<j:if test="${!build.first}">
 					<st:nbsp/>&gt;<st:nbsp/>
 				</j:if>

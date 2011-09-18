@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.AbstractCompactColumnDescriptor;
+import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.TimeAgoType;
 
 /**
  * @author jacob robertson
@@ -83,7 +84,8 @@ public class JobNameColorColumn extends AbstractCompactColumn {
 			}
 		}
 		if (showLastBuild) {
-			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, false, false, true, isShowColorblindUnderlineHint(), 0);
+			// TODO could me much more efficient if we have a flag to get just the first build (will help with other TODO)
+			List<BuildInfo> builds = AbstractStatusesColumn.getBuilds(job, locale, false, false, true, isShowColorblindUnderlineHint(), TimeAgoType.DIFF, 0);
 			if (!builds.isEmpty()) {
 				BuildInfo build = builds.get(0);
 				String desc = AbstractStatusesColumn.getBuildDescriptionToolTip(build, locale);

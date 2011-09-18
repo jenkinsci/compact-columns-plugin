@@ -33,7 +33,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class LastStableAndUnstableColumn extends AbstractStatusesColumn {
 	@DataBoundConstructor
 	public LastStableAndUnstableColumn() {
-		super(null);
+		super(null, null);
 	}
 	@Override
 	protected boolean isFailedShownOnlyIfLast() {

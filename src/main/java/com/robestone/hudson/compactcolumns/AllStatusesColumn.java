@@ -35,8 +35,8 @@ public class AllStatusesColumn extends AbstractStatusesColumn {
     private int hideDays;
 
 	@DataBoundConstructor
-	public AllStatusesColumn(String colorblindHint, boolean onlyShowLastStatus, int hideDays) {
-    	super(colorblindHint);
+	public AllStatusesColumn(String colorblindHint, boolean onlyShowLastStatus, String timeAgoTypeString, int hideDays) {
+    	super(colorblindHint, timeAgoTypeString);
     	this.onlyShowLastStatus = onlyShowLastStatus;
     	this.hideDays = hideDays;
     }

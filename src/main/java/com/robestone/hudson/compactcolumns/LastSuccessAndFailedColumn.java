@@ -33,7 +33,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class LastSuccessAndFailedColumn extends AbstractStatusesColumn {
 	@DataBoundConstructor
 	public LastSuccessAndFailedColumn() {
-		super(null);
+		super(null, null);
 	}
 	@Override
 	protected boolean isFailedShownOnlyIfLast() {

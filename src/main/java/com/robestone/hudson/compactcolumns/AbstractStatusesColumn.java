@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -56,11 +57,28 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     private static final long ONE_MONTH_MS = 30 * ONE_DAY_MS;
     private static final long ONE_YEAR_MS = 365 * ONE_DAY_MS;
 
-    public AbstractStatusesColumn(String colorblindHint) {
+    public static enum TimeAgoType { DIFF, PREFER_DATES, PREFER_DATE_TIME }
+    
+    private transient TimeAgoType timeAgoType;
+    private String timeAgoTypeString;
+    
+    public AbstractStatusesColumn(String colorblindHint, String timeAgoTypeString) {
     	super(colorblindHint);
+    	this.timeAgoTypeString = timeAgoTypeString;
+    	setTimeAgoType();
+    }
+    Object readResolve() {
+    	setTimeAgoType();
+        return this;
+    }
+    private void setTimeAgoType() {
+    	if (timeAgoTypeString == null) {
+    		timeAgoTypeString = TimeAgoType.DIFF.toString();
+    	}
+       	timeAgoType = TimeAgoType.valueOf(timeAgoTypeString);
     }
     public String getColumnSortData(Job<?, ?> job) {
-    	List<BuildInfo> builds = getBuilds(job);
+    	List<BuildInfo> builds = getBuilds(job, Locale.getDefault());
     	if (builds.isEmpty()) {
     		return "0";
     	}
@@ -72,26 +90,27 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 	}
     public boolean isBuildsEmpty(Job<?, ?> job) {
     	// TODO -- make much more efficient
-    	return getBuilds(job).isEmpty();
+    	return getBuilds(job, Locale.getDefault()).isEmpty();
     }
-    public List<BuildInfo> getBuilds(Job<?, ?> job) {
+    public List<BuildInfo> getBuilds(Job<?, ?> job, Locale locale) {
     	return getBuilds(
-    			job, 
+    			job, locale, 
     			isFailedShownOnlyIfLast(), isUnstableShownOnlyIfLast(), 
-    			isOnlyShowLastStatus(), isShowColorblindUnderlineHint(),
+    			isOnlyShowLastStatus(), isShowColorblindUnderlineHint(), timeAgoType,
     			getHideDays());
     }
-    public static List<BuildInfo> getBuilds(Job<?, ?> job, 
+    public static List<BuildInfo> getBuilds(Job<?, ?> job, Locale locale, 
     		boolean isFailedShownOnlyIfLast, boolean isUnstableShownOnlyIfLast, 
-    		boolean isOnlyShowLastStatus, boolean isShowColorblindUnderlineHint, int hideDays) {
+    		boolean isOnlyShowLastStatus, boolean isShowColorblindUnderlineHint, TimeAgoType timeAgoType, int hideDays) {
     	List<BuildInfo> builds = new ArrayList<BuildInfo>();
 
-    	addNonNull(builds, getLastFailedBuild(job, isFailedShownOnlyIfLast, isShowColorblindUnderlineHint));
-	    addNonNull(builds, getLastUnstableBuild(job, isUnstableShownOnlyIfLast, isShowColorblindUnderlineHint));
-	    addNonNull(builds, getLastStableBuild(job, isShowColorblindUnderlineHint));
+    	addNonNull(builds, getLastFailedBuild(job, locale, isFailedShownOnlyIfLast, isShowColorblindUnderlineHint, true, timeAgoType));
+	    addNonNull(builds, getLastUnstableBuild(job, locale, isUnstableShownOnlyIfLast, isShowColorblindUnderlineHint, builds.isEmpty(), timeAgoType));
+	    addNonNull(builds, getLastStableBuild(job, locale, isShowColorblindUnderlineHint, builds.isEmpty(), timeAgoType));
 
     	if (builds.isEmpty()) {
-        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), BuildInfo.OTHER_COLOR, OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job, isShowColorblindUnderlineHint);
+        	BuildInfo aborted = createBuildInfo(getLastAbortedBuild(job), BuildInfo.OTHER_COLOR, OTHER_UNDERLINE_STYLE, getAbortedMessage(), null, job, 
+        			locale, isShowColorblindUnderlineHint, true, timeAgoType);
         	addNonNull(builds, aborted);
     	}
     	
@@ -122,6 +141,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 			BuildInfo info = builds.get(i);
 			info.setFirst(i == 0);
 			info.setMultipleBuilds(builds.size() > 1);
+			assignTimeAgoString(info, locale, timeAgoType);
 		}
 
     	return builds;
@@ -130,13 +150,15 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
      * @param onlyIfLastCompleted When the statuses aren't sorted, we only show the last failed
      * when it is also the latest completed build.
      */
-    public static BuildInfo getLastFailedBuild(Job<?, ?> job, boolean onlyIfLastCompleted, boolean isShowColorblindUnderlineHint) {
+    public static BuildInfo getLastFailedBuild(Job<?, ?> job, Locale locale, boolean onlyIfLastCompleted, boolean isShowColorblindUnderlineHint, 
+    		boolean isFirst, TimeAgoType timeAgoType) {
     	Run<?, ?> lastFailedBuild = job.getLastFailedBuild();
     	Run<?, ?> lastCompletedBuild = job.getLastCompletedBuild();
     	if (lastFailedBuild == null) {
     		return null;
     	} else if (!onlyIfLastCompleted || (lastCompletedBuild.number == lastFailedBuild.number)) {
-        	return createBuildInfo(job.getLastFailedBuild(), BuildInfo.FAILED_COLOR, FAILED_UNDERLINE_STYLE, getFailedMessage(), "lastFailedBuild", job, isShowColorblindUnderlineHint);
+        	return createBuildInfo(job.getLastFailedBuild(), BuildInfo.FAILED_COLOR, FAILED_UNDERLINE_STYLE, getFailedMessage(), "lastFailedBuild", job, 
+        			locale, isShowColorblindUnderlineHint, isFirst, timeAgoType);
     	} else {
     		return null;
     	}
@@ -147,11 +169,14 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 		return false;
 	}
 
-    public static BuildInfo getLastStableBuild(Job<?, ?> job, boolean isShowColorblindUnderlineHint) {
-    	return createBuildInfo(job.getLastStableBuild(), BuildInfo.getStableColorString(), STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job, isShowColorblindUnderlineHint);
+    public static BuildInfo getLastStableBuild(Job<?, ?> job, Locale locale, boolean isShowColorblindUnderlineHint, 
+    		boolean isFirst, TimeAgoType timeAgoType) {
+    	return createBuildInfo(job.getLastStableBuild(), BuildInfo.getStableColorString(), STABLE_UNDERLINE_STYLE, getStableMessage(), "lastStableBuild", job, 
+    			locale, isShowColorblindUnderlineHint, isFirst, timeAgoType);
     }
 
-    public static BuildInfo getLastUnstableBuild(Job<?, ?> job, boolean isUnstableShownOnlyIfLast, boolean isShowColorblindUnderlineHint) {
+    public static BuildInfo getLastUnstableBuild(Job<?, ?> job, Locale locale, boolean isUnstableShownOnlyIfLast, 
+    		boolean isShowColorblindUnderlineHint, boolean isFirst, TimeAgoType timeAgoType) {
     	Run<?, ?> lastUnstable = null;
     	Run<?, ?> latest = job.getLastBuild();
     	while (latest != null) {
@@ -171,7 +196,8 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     		return null;
     	}
     	
-    	return createBuildInfo(lastUnstable, BuildInfo.UNSTABLE_COLOR, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job, isShowColorblindUnderlineHint);
+    	return createBuildInfo(lastUnstable, BuildInfo.UNSTABLE_COLOR, UNSTABLE_UNDERLINE_STYLE, getUnstableMessage(), String.valueOf(lastUnstable.number), job,
+    			locale, isShowColorblindUnderlineHint, isFirst, timeAgoType);
     }
 
     private static void addNonNull(List<BuildInfo> builds, BuildInfo info) {
@@ -189,9 +215,14 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	}
     	return null;
     }
-    private static BuildInfo createBuildInfo(Run<?, ?> run, String color, String underlineStyle, String status, String urlPart, Job<?, ?> job, boolean isShowColorblindUnderlineHint) {
+    private static void assignTimeAgoString(BuildInfo info, Locale locale, TimeAgoType timeAgoType) {
+    	String timeAgoString = getTimeAgoString(locale, info.getBuildTime(), info.isMultipleBuilds(), timeAgoType);
+    	info.setTimeAgoString(timeAgoString);
+    }
+    private static BuildInfo createBuildInfo(
+    		Run<?, ?> run, String color, String underlineStyle, String status, String urlPart, Job<?, ?> job, 
+    		Locale locale, boolean isShowColorblindUnderlineHint, boolean isFirst, TimeAgoType timeAgoType) {
     	if (run != null) {
-	    	String timeAgoString = getTimeAgoString(run.getTimeInMillis());
 	    	long buildTime = run.getTime().getTime();
 	    	if (urlPart == null) {
 	    		urlPart = String.valueOf(run.number);
@@ -204,44 +235,93 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 	    		underlineStyle = null;
 	    	}
 	    	BuildInfo build = new BuildInfo(
-	    			run, color, underlineStyle, timeAgoString, buildTime, 
+	    			run, color, underlineStyle, buildTime, 
 	    			status, urlPart, run.number == latest.number);
 	    	return build;
     	}
     	return null;
     }
-    protected static String getTimeAgoString(long timestamp) {
-    	long now = System.currentTimeMillis();
-    	float diff = now - timestamp;
-    	String stime = getShortTimestamp(diff);
-    	return stime;
+    protected static String getTimeAgoString(Locale locale, long timestamp, boolean isMultiple, TimeAgoType timeAgoType) {
+    	if (timeAgoType == TimeAgoType.DIFF) {
+	    	long now = System.currentTimeMillis();
+	    	float diff = now - timestamp;
+	    	String stime = getShortTimestamp(diff);
+	    	return stime;
+    	} else {
+    		if (timeAgoType == TimeAgoType.PREFER_DATE_TIME && !isMultiple) {
+    			return getBuildTimeString(timestamp, locale, true, true, true);
+    		} else {
+    	    	Calendar nowCal = Calendar.getInstance();
+    	    	nowCal.setTimeInMillis(System.currentTimeMillis());
+    	    	Calendar thenCal = Calendar.getInstance();
+    	    	thenCal.setTimeInMillis(timestamp);
+    	    	
+    	    	int nowDay = nowCal.get(Calendar.DAY_OF_YEAR);
+    	    	int thenDay = thenCal.get(Calendar.DAY_OF_YEAR);
+
+        		boolean isToday = (nowDay == thenDay);
+        		if (isToday) {
+        			return getBuildTimeString(timestamp, locale, false, true, false);
+        		} else {
+        			return getBuildTimeString(timestamp, locale, true, false, false);
+        		}
+    		}
+    	}
     }
     protected static String getBuildTimeString(long timeMs, Locale locale) {
+    	return getBuildTimeString(timeMs, locale, true, true, false);
+    }
+    protected static String getBuildTimeString(long timeMs, Locale locale, 
+    		boolean addDate, boolean addTime, boolean useDefaultFormat) {
     	Date time = new Date(timeMs);
-    	DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-    	String datePattern = getDatePattern(locale);
-    	DateFormat dateFormat = new SimpleDateFormat(datePattern, locale);
-    	String timeString = timeFormat.format(time);
-    	String dateString = dateFormat.format(time);
-    	String dateTimeString = timeString + ", " + dateString;
-    	return dateTimeString;
+
+    	if (addTime && addDate && useDefaultFormat) {
+    		DateFormat dateFormat = getDateTimePattern(locale);
+	    	String dateString = dateFormat.format(time);
+    		return dateString;
+    	} else {
+        	StringBuilder buf = new StringBuilder();
+	    	if (addTime) {
+		    	DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		    	String timeString = timeFormat.format(time);
+		   		buf.append(timeString);
+	    	}
+	    	if (addDate) {
+	    		DateFormat dateFormat = getDatePattern(locale);
+		    	String dateString = dateFormat.format(time);
+		    
+		    	if (buf.length() > 0) {
+		    		buf.append(", ");
+		    	}
+		   		buf.append(dateString);
+	    	}
+	    	return buf.toString();
+    	}
     }
     
     /**
      * I want to use 4-digit years (for clarity), and that doesn't work out of the box...
      */
-    protected static String getDatePattern(Locale locale) {
+    protected static DateFormat getDatePattern(Locale locale) {
     	DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+   		return getDatePattern(format, locale);
+    }
+    protected static DateFormat getDateTimePattern(Locale locale) {
+    	DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+   		return getDatePattern(format, locale);
+    }
+    private static DateFormat getDatePattern(DateFormat format, Locale locale) {
     	if (format instanceof SimpleDateFormat) {
-    		String s = ((SimpleDateFormat) format).toPattern();
-    		if (!s.contains("yyyy")) {
-    			s = s.replace("yy", "yyyy");
-    		}
-    		return s;
-    	} else {
-    		// shown by unit test to not be a problem...
-    		throw new IllegalArgumentException("Can't handle locale: " + locale);
-    	}
+			String s = ((SimpleDateFormat) format).toPattern();
+			if (!s.contains("yyyy")) {
+				s = s.replace("yy", "yyyy");
+			}
+	    	DateFormat dateFormat = new SimpleDateFormat(s, locale);
+			return dateFormat;
+		} else {
+			// shown by unit test to not be a problem...
+			throw new IllegalArgumentException("Can't handle locale: " + locale);
+	    }
     }
     
     /**
@@ -336,7 +416,9 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     	}
     	return message;
     }
-
+    public String getTimeAgoTypeString() {
+		return timeAgoTypeString;
+	}
     public abstract static class AbstractCompactColumnDescriptor extends ListViewColumnDescriptor {
         @Override
         public boolean shownByDefault() {

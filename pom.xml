@@ -9,7 +9,7 @@
 
 	<artifactId>compact-columns</artifactId>
 	<packaging>hpi</packaging>
-	<version>1.10-SNAPSHOT</version>
+	<version>1.10</version>
 	<name>Compact Columns</name>
 
 	<description>

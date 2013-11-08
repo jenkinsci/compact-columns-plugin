@@ -177,15 +177,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 
     public static BuildInfo getLastUnstableBuild(Job<?, ?> job, Locale locale, boolean isUnstableShownOnlyIfLast, 
     		boolean isShowColorblindUnderlineHint, boolean isFirst, TimeAgoType timeAgoType) {
-    	Run<?, ?> lastUnstable = null;
-    	Run<?, ?> latest = job.getLastBuild();
-    	while (latest != null) {
-    		if (latest.getResult() == Result.UNSTABLE) {
-    			lastUnstable = latest;
-    			break;
-    		}
-    		latest = latest.getPreviousBuild();
-    	}
+    	Run<?, ?> lastUnstable = job.getLastUnstableBuild();
     	if (lastUnstable == null) {
     		return null;
     	}
@@ -207,7 +199,8 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     }
     private static Run<?, ?> getLastAbortedBuild(Job<?, ?> job) {
     	Run<?, ?> latest = job.getLastBuild();
-    	while (latest != null) {
+        int i = 0;
+    	while (latest != null && i++ < 20) {
     		if (latest.getResult() == Result.ABORTED) {
     			return latest;
     		}

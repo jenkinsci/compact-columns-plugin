@@ -38,10 +38,15 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.TimeAgoType;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
 public class CompactColumnsTest extends TestCase {
+
+    @Override protected void setUp() throws Exception {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT-5:00"));
+    }
 
 	public void testDateFormats() {
 		doTestDateFormats(Locale.US, DateFormat.SHORT, "6/24/10");

@@ -2,6 +2,6 @@
     <td style="${indenter.getCss(job)}">
         <a href="${jobBaseUrl}${job.shortUrl}"
         	tooltip="${job.description}"
-         >${job.displayName}</a>
+         >${job.getRelativeDisplayNameFrom(currentView.owner.itemGroup)}</a>
     </td>
 </j:jelly>

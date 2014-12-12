@@ -3,6 +3,6 @@
         <a href="${jobBaseUrl}${job.shortUrl}"
         	tooltip="${it.getToolTip(job, request.locale)}"
         	style="${it.getStyle(job)}"
-         >${job.displayName}</a>
+         >${job.getRelativeDisplayNameFrom(currentView.owner.itemGroup)}</a>
     </td>
 </j:jelly>

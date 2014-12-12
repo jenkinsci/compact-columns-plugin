@@ -4,7 +4,7 @@
     <a href="${jobBaseUrl}${job.shortUrl}"
         tooltip="${it.getToolTip(job, request.locale)}"
         style="${it.getStyle(job)}">
-      ${job.displayName}
+      ${job.getRelativeDisplayNameFrom(itemGroup)}
     </a>
   </td>
 </j:jelly>

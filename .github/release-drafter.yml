@@ -1,0 +1,4 @@
+_extends: .github
+tag-template: compact-columns-$NEXT_MINOR_VERSION
+
+

@@ -17,7 +17,7 @@
     More compact columns for showing last success and failure.
     Easier to understand, and takes less room in your view.
   </description>
-  <url>http://wiki.jenkins-ci.org/display/JENKINS/Compact+Columns</url>
+  <url>https://github.com/jenkinsci/compact-columns-plugin</url>
   <licenses>
     <license>
       <name>MIT License</name>

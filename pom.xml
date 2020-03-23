@@ -18,6 +18,12 @@
     Easier to understand, and takes less room in your view.
   </description>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Compact+Columns</url>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
 
   <developers>
     <developer>

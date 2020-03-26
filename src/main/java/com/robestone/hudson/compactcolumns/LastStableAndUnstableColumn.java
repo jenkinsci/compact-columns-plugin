@@ -1,18 +1,18 @@
 /*
  * The MIT License
- * 
+ *
  * Copyright (c) 2009, Sun Microsystems, Inc., Jesse Glick
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,31 +24,31 @@
 package com.robestone.hudson.compactcolumns;
 
 import hudson.Extension;
-
 import org.kohsuke.stapler.DataBoundConstructor;
 
-/**
- * @author jacob robertson
- */
+/** @author jacob robertson */
 public class LastStableAndUnstableColumn extends AbstractStatusesColumn {
-	@DataBoundConstructor
-	public LastStableAndUnstableColumn() {
-		super(null, null);
-	}
-	@Override
-	protected boolean isFailedShownOnlyIfLast() {
-		return true;
-	}
-	@Override
-	protected boolean isUnstableShownOnlyIfLast() {
-		return false;
-	}
-	@Extension
-	public static class LastCompletedAndSuccessAndStableColumnDescriptor extends
-			AbstractCompactColumnDescriptor {
-		@Override
-		public String getDisplayName() {
-			return Messages.Compact_Column_Unstable_Stable();
-		}
-	}
+  @DataBoundConstructor
+  public LastStableAndUnstableColumn() {
+    super(null, null);
+  }
+
+  @Override
+  protected boolean isFailedShownOnlyIfLast() {
+    return true;
+  }
+
+  @Override
+  protected boolean isUnstableShownOnlyIfLast() {
+    return false;
+  }
+
+  @Extension
+  public static class LastCompletedAndSuccessAndStableColumnDescriptor
+      extends AbstractCompactColumnDescriptor {
+    @Override
+    public String getDisplayName() {
+      return Messages.Compact_Column_Unstable_Stable();
+    }
+  }
 }

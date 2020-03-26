@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core">
-    <th initialSortDir="down">${it.descriptor.columnDisplayName}</th>
+  <th initialSortDir="down">${it.descriptor.columnDisplayName}</th>
 </j:jelly>

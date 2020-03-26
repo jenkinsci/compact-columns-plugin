@@ -1,19 +1,26 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core">
 
-	<j:invokeStatic var="message_failed" className="com.robestone.hudson.compactcolumns.AbstractStatusesColumn" method="getFailedMessage"/>
-	<j:invokeStatic var="message_unstable" className="com.robestone.hudson.compactcolumns.AbstractStatusesColumn" method="getUnstableMessage"/>
-	<j:invokeStatic var="message_stable" className="com.robestone.hudson.compactcolumns.AbstractStatusesColumn" method="getStableMessage"/>
-	
-	<j:invokeStatic var="color_stable" className="com.robestone.hudson.compactcolumns.BuildInfo" method="getStableColorString"/>
-	<j:invokeStatic var="color_unstable" className="com.robestone.hudson.compactcolumns.BuildInfo" method="getUnstableColorString"/>
-	<j:invokeStatic var="color_failed" className="com.robestone.hudson.compactcolumns.BuildInfo" method="getFailedColorString"/>
-	
-    <th tooltip=
-    "&lt;span style='text-decoration: underline; color: ${color_failed}'&gt;${message_failed}&lt;/span&gt;;
-     &lt;span style='text-decoration: underline; color: ${color_unstable}'&gt;${message_unstable}&lt;/span&gt;; 
+  <j:invokeStatic var="message_failed" className="com.robestone.hudson.compactcolumns.AbstractStatusesColumn"
+      method="getFailedMessage" />
+  <j:invokeStatic var="message_unstable" className="com.robestone.hudson.compactcolumns.AbstractStatusesColumn"
+      method="getUnstableMessage" />
+  <j:invokeStatic var="message_stable" className="com.robestone.hudson.compactcolumns.AbstractStatusesColumn"
+      method="getStableMessage" />
+
+  <j:invokeStatic var="color_stable" className="com.robestone.hudson.compactcolumns.BuildInfo"
+      method="getStableColorString" />
+  <j:invokeStatic var="color_unstable" className="com.robestone.hudson.compactcolumns.BuildInfo"
+      method="getUnstableColorString" />
+  <j:invokeStatic var="color_failed" className="com.robestone.hudson.compactcolumns.BuildInfo"
+      method="getFailedColorString" />
+
+  <th tooltip=
+      "&lt;span style='text-decoration: underline; color: ${color_failed}'&gt;${message_failed}&lt;/span&gt;;
+     &lt;span style='text-decoration: underline; color: ${color_unstable}'&gt;${message_unstable}&lt;/span&gt;;
      &lt;span style='text-decoration: underline; color: ${color_stable}'&gt;${message_stable}&lt;/span&gt;
     &lt;br/&gt;
-	&lt;b&gt;${%More Recent}&lt;/b&gt; &gt; ${%Less Recent}
-	"
-    >${%Last Statuses}</th>
+	&lt;b&gt;${%More Recent}&lt;/b&gt; &gt; ${%Less Recent}">
+    ${%Last Statuses}
+  </th>
 </j:jelly>

@@ -1,20 +1,22 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
-	<td data="${it.getColumnSortData(job)}">
-		<j:choose>
-		<j:when test="${!it.isBuildsEmpty(job)}">
-      		<j:forEach var="build" items="${it.getBuilds(job, request.locale)}">
-				<j:if test="${!build.first}">
-					<st:nbsp/>&gt;<st:nbsp/>
-				</j:if>
-				<a href="${jobBaseUrl}${job.shortUrl}${build.urlPart}" 
-					style="color: ${build.color}; font-weight: ${build.fontWeight}; text-decoration: ${build.textDecoration}; border-bottom: ${build.underlineStyle}"
-					tooltip="${it.getToolTip(build, request.locale)}"
-				>${build.timeAgoString}</a>
-			</j:forEach>
-		</j:when>
-		<j:otherwise>
-			${%N/A}
-		</j:otherwise>
-		</j:choose>
-	</td>
+  <td data="${it.getColumnSortData(job)}">
+    <j:choose>
+      <j:when test="${!it.isBuildsEmpty(job)}">
+        <j:forEach var="build" items="${it.getBuilds(job, request.locale)}">
+          <j:if test="${!build.first}">
+            <st:nbsp />&gt;<st:nbsp />
+          </j:if>
+          <a href="${jobBaseUrl}${job.shortUrl}${build.urlPart}"
+              style="color: ${build.color}; font-weight: ${build.fontWeight}; text-decoration: ${build.textDecoration}; border-bottom: ${build.underlineStyle}"
+              tooltip="${it.getToolTip(build, request.locale)}">
+            ${build.timeAgoString}
+          </a>
+        </j:forEach>
+      </j:when>
+      <j:otherwise>
+        ${%N/A}
+      </j:otherwise>
+    </j:choose>
+  </td>
 </j:jelly>

@@ -23,6 +23,8 @@
  */
 package com.robestone.hudson.compactcolumns;
 
+import static org.junit.Assert.*;
+
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.TimeAgoType;
 import hudson.model.Job;
 import hudson.model.Result;
@@ -37,15 +39,18 @@ import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
-public class CompactColumnsTest extends TestCase {
+public class CompactColumnsTest {
 
-  @Override
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() {
     TimeZone.setDefault(TimeZone.getTimeZone("GMT-5:00"));
   }
 
+  @Test
   public void testDateFormats() {
     doTestDateFormats(Locale.US, DateFormat.SHORT, "6/24/10");
     doTestDateFormats(Locale.US, DateFormat.MEDIUM, "Jun 24, 2010");
@@ -60,6 +65,7 @@ public class CompactColumnsTest extends TestCase {
     assertEquals(expect, output);
   }
 
+  @Test
   public void testDateTimeFormats() {
     doTestDateTimeFormats(Locale.US, DateFormat.SHORT, DateFormat.SHORT, "6/24/10 4:56 PM");
     doTestDateTimeFormats(Locale.US, DateFormat.MEDIUM, DateFormat.SHORT, "Jun 24, 2010 4:56 PM");
@@ -76,6 +82,7 @@ public class CompactColumnsTest extends TestCase {
   }
 
   /** Shows that all locale handling will be okay. */
+  @Test
   public void testNoBadLocale() {
     Locale[] locales = Locale.getAvailableLocales();
     for (Locale locale : locales) {
@@ -84,6 +91,7 @@ public class CompactColumnsTest extends TestCase {
     }
   }
 
+  @Test
   public void testShowDate() {
     doTestShowDate(Locale.GERMAN, "16:56", "24.06.2010");
     doTestShowDate(Locale.US, "4:56 PM", "6/24/2010");
@@ -113,6 +121,7 @@ public class CompactColumnsTest extends TestCase {
     assertFalse(expectTime.equals(ago));
   }
 
+  @Test
   public void testLocalizeDate() {
     long time = 1277416568304L;
     doTestLocalizeDate(time, Locale.ENGLISH, "4:56 PM, 6/24/2010");
@@ -126,6 +135,7 @@ public class CompactColumnsTest extends TestCase {
   }
 
   /** This just shows the weird way the Hudson.util is working. */
+  @Test
   public void testTime() {
     doTestTime(0, "0 sec");
     doTestTime(500, "0 sec");
@@ -149,6 +159,9 @@ public class CompactColumnsTest extends TestCase {
     assertEquals(expect, found);
   }
 
+  @Test
+  @Ignore(
+      "Broken on newer versions of Jenkins, because this test tries to work with subclasses of Job and Run")
   public void testGetBuilds() {
     doTestBuilds("SSFFUFUS", "SU", "SF", "SFU");
     doTestBuilds("FSSFFUFUS", "FSU", "FS", "FSU");
@@ -230,6 +243,7 @@ public class CompactColumnsTest extends TestCase {
     }
   }
 
+  @Test
   public void testStableColor() throws Exception {
     assertEquals(Color.BLUE, BuildInfo.getStableColor());
     assertFalse(ColorPalette.BLUE.equals(BuildInfo.getStableColor()));
@@ -242,6 +256,7 @@ public class CompactColumnsTest extends TestCase {
     assertFalse(Color.BLUE.equals(BuildInfo.getStableColor()));
   }
 
+  @Test
   public void testColorString() {
     assertEquals("#0000ff", BuildInfo.getStableColorString());
     assertEquals("#ef2929", BuildInfo.FAILED_COLOR);

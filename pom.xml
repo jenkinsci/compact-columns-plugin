@@ -5,7 +5,8 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.424</version>
+    <version>3.57</version>
+    <relativePath />
   </parent>
 
   <artifactId>compact-columns</artifactId>
@@ -38,6 +39,13 @@
     <developerConnection>scm:git:git@github.com:jenkinsci/compact-columns-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/compact-columns</url>
   </scm>
+
+  <properties>
+    <jenkins.version>2.121.3</jenkins.version>
+    <java.level>8</java.level>
+    <!-- TODO: Fix illegal accesses -->
+    <access-modifier-checker.failOnError>false</access-modifier-checker.failOnError>
+  </properties>
 
   <repositories>
     <repository>

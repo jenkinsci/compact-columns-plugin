@@ -45,6 +45,7 @@
     <java.level>8</java.level>
     <!-- TODO: Fix illegal accesses -->
     <access-modifier-checker.failOnError>false</access-modifier-checker.failOnError>
+    <doclint>all</doclint>
   </properties>
 
   <repositories>

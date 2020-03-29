@@ -371,8 +371,13 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
   /**
    * Avoids having "2 days 3 hours" and instead does "2.1 days".
    *
-   * <p>Additional strategy details: < 1 sec = 0 sec < 10 of anything = x.y of that (scale 1) >= 10
-   * of anything = x (scale 0)
+   * <p>Additional strategy details:
+   *
+   * <ul>
+   *   <li>&lt; 1 sec = 0 sec
+   *   <li>&lt; 10 of anything = x.y of that (scale 1)
+   *   <li>&gt;= 10 of anything = x (scale 0)
+   * </ul>
    */
   protected static String getShortTimestamp(float time) {
     String ts;

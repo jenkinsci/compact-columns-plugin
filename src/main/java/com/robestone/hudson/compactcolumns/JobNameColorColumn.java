@@ -9,6 +9,7 @@ import hudson.model.Run;
 import java.util.List;
 import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /** @author jacob robertson */
@@ -119,6 +120,7 @@ public class JobNameColorColumn extends AbstractCompactColumn {
   }
 
   @Extension
+  @Symbol("compactJobNameColor")
   public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
     public String getColumnDisplayName() {
       return hudson.views.Messages.JobColumn_DisplayName();

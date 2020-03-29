@@ -24,6 +24,7 @@
 package com.robestone.hudson.compactcolumns;
 
 import hudson.Extension;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /** @author jacob robertson */
@@ -59,7 +60,8 @@ public class AllStatusesColumn extends AbstractStatusesColumn {
   }
 
   @Extension
-  public static class AllStatusesColumnDescriptor extends AbstractCompactColumnDescriptor {
+  @Symbol("compactAllStatuses")
+  public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
     @Override
     public String getDisplayName() {
       return Messages.Compact_Column_Statuses_w_Options();

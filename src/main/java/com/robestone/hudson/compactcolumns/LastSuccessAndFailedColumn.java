@@ -24,6 +24,7 @@
 package com.robestone.hudson.compactcolumns;
 
 import hudson.Extension;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /** @author jacob robertson */
@@ -44,7 +45,8 @@ public class LastSuccessAndFailedColumn extends AbstractStatusesColumn {
   }
 
   @Extension
-  public static class LastSuccessAndFailedColumnDescriptor extends AbstractCompactColumnDescriptor {
+  @Symbol("compactLastSuccessAndFailed")
+  public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
     @Override
     public String getDisplayName() {
       return Messages.Compact_Column_Stable_Failed();

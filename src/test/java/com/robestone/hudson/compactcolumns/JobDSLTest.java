@@ -43,11 +43,21 @@ public class JobDSLTest {
   @Test
   // This test makes sure that JobDSL scripts using automatically generated names work
   public void testAutomaticJobDsl() throws IOException {
+    doTest("automatic");
+  }
+
+  @Test
+  // This test makes sure that JobDSL scripts using symbol annotations work
+  public void testSymbolJobDsl() throws IOException {
+    doTest("symbol");
+  }
+
+  private void doTest(String type) throws IOException {
     JenkinsJobManagement m =
         new JenkinsJobManagement(System.out, Collections.emptyMap(), Paths.get(".").toFile());
-    new DslScriptLoader(m).runScript(readResource("/automaticJobDSL.groovy"));
+    new DslScriptLoader(m).runScript(readResource("/" + type + "JobDSL.groovy"));
 
-    View legacyView = j.jenkins.getView("legacyView");
+    View legacyView = j.jenkins.getView(type + "View");
     assertThat(legacyView.getColumns(), iterableWithSize(5));
     assertThat(
         legacyView.getColumns(),

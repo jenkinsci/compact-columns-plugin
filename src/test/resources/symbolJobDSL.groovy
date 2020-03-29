@@ -1,19 +1,19 @@
-listView('automaticView') {
+listView('symbolView') {
   columns {
-    allStatusesColumn {
+    compactAllStatuses {
       colorblindHint 'underlinehint'
       onlyShowLastStatus false
       timeAgoTypeString 'PREFER_DATES'
       hideDays 7
     }
-    jobNameColorColumn {
+    compactJobNameColor {
       showColor true
       showDescription true
       showLastBuild true
       colorblindHint 'nohint'
     }
-    jobNameColumn()
-    lastStableAndUnstableColumn()
-    lastSuccessAndFailedColumn()
+    compactJobName()
+    compactLastStableAndUnstable()
+    compactLastSuccessAndFailed()
   }
 }

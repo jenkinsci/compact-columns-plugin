@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>compact-columns</artifactId>
-  <version>1.11-SNAPSHOT</version>
+  <version>${revision}${changelist}</version>
   <packaging>hpi</packaging>
 
   <name>Compact Columns</name>
@@ -41,6 +41,8 @@
   </scm>
 
   <properties>
+    <revision>1.11</revision>
+    <changelist>-SNAPSHOT</changelist>
     <jenkins.version>2.121.3</jenkins.version>
     <java.level>8</java.level>
     <!-- TODO: Fix illegal accesses -->

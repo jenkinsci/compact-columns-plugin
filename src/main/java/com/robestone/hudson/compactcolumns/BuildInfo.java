@@ -4,6 +4,7 @@ import hudson.model.Run;
 import hudson.util.ColorPalette;
 import java.awt.Color;
 import java.util.Locale;
+import java.util.Objects;
 
 /** @author jacob robertson */
 public class BuildInfo implements Comparable<BuildInfo> {
@@ -18,7 +19,7 @@ public class BuildInfo implements Comparable<BuildInfo> {
   /** Work-around to check whether the palette has been changed. */
   private static final Color BLUE_FROM_PALETTE = new Color(0x72, 0x9F, 0xCF);
 
-  private Run<?, ?> run;
+  private final Run<?, ?> run;
   private String color;
   private String underlineStyle;
   private String timeAgoString;
@@ -37,7 +38,7 @@ public class BuildInfo implements Comparable<BuildInfo> {
       String status,
       String urlPart,
       boolean isLatestBuild) {
-    this.run = run;
+    this.run = Objects.requireNonNull(run, "BuildInfo needs a run");
     this.color = color;
     this.underlineStyle = underlineStyle;
     this.buildTime = buildTime;
@@ -123,8 +124,6 @@ public class BuildInfo implements Comparable<BuildInfo> {
     return multipleBuilds;
   }
 
-  // ----
-
   public String getLatestBuildString(Locale locale) {
     if (isLatestBuild) {
       return " (" + Messages.latestBuild() + ")";
@@ -174,7 +173,20 @@ public class BuildInfo implements Comparable<BuildInfo> {
   }
   /** Sort by build number. */
   public int compareTo(BuildInfo that) {
-    return new Integer(that.run.number).compareTo(this.run.number);
+    return Integer.compare(that.run.number, this.run.number);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    BuildInfo buildInfo = (BuildInfo) o;
+    return run.number == buildInfo.run.number;
+  }
+
+  @Override
+  public int hashCode() {
+    return Integer.hashCode(run.number);
   }
 
   public String getTextDecoration() {

@@ -426,7 +426,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
   public static final String getBuildDescriptionToolTip(BuildInfo build, Locale locale) {
     StringBuilder buf = new StringBuilder();
     buf.append("<b><u>");
-    buf.append(Messages.BuildNumber());
+    buf.append(Messages.buildNumber());
     buf.append(build.getRun().number);
     buf.append(build.getLatestBuildString(locale));
     buf.append("</u></b>\n");

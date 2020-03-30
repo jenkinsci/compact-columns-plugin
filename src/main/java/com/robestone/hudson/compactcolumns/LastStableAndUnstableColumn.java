@@ -24,6 +24,7 @@
 package com.robestone.hudson.compactcolumns;
 
 import hudson.Extension;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /** @author jacob robertson */
@@ -44,8 +45,8 @@ public class LastStableAndUnstableColumn extends AbstractStatusesColumn {
   }
 
   @Extension
-  public static class LastCompletedAndSuccessAndStableColumnDescriptor
-      extends AbstractCompactColumnDescriptor {
+  @Symbol("compactLastStableAndUnstable")
+  public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
     @Override
     public String getDisplayName() {
       return Messages.Compact_Column_Unstable_Stable();

@@ -2,8 +2,8 @@
 <j:jelly xmlns:j="jelly:core">
   <td style="${indenter.getCss(job)}">
     <a href="${jobBaseUrl}${job.shortUrl}"
-        tooltip="${job.description}"
-    >${job.displayName}
+        tooltip="${job.description}">
+      ${job.getRelativeDisplayNameFrom(itemGroup)}
     </a>
   </td>
 </j:jelly>

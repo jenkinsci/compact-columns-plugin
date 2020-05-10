@@ -104,7 +104,7 @@ public class JobNameColorColumn extends AbstractCompactColumn {
         }
       }
     }
-    return tip.toString();
+    return (tip.length() > 0) ? tip.toString() : null;
   }
 
   public boolean isShowColor() {

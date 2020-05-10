@@ -2,7 +2,7 @@
 <j:jelly xmlns:j="jelly:core">
   <td style="${indenter.getCss(job)}">
     <a href="${jobBaseUrl}${job.shortUrl}"
-        tooltip="${job.description}">
+        tooltip="${empty(job.description) ? null : job.description}">
       ${job.getRelativeDisplayNameFrom(itemGroup)}
     </a>
   </td>

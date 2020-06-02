@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>compact-columns</artifactId>
-  <version>1.12</version>
+  <version>${revision}${changelist}</version>
   <packaging>hpi</packaging>
 
   <name>Compact Columns</name>
@@ -38,11 +38,11 @@
     <connection>scm:git:https://github.com/jenkinsci/compact-columns-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/compact-columns-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/compact-columns</url>
-    <tag>compact-columns-1.12</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
-    <revision>1.12</revision>
+    <revision>1.13</revision>
     <changelist>-SNAPSHOT</changelist>
     <jenkins.version>2.121.3</jenkins.version>
     <java.level>8</java.level>

@@ -6,8 +6,10 @@ import hudson.Extension;
 import hudson.model.Job;
 import hudson.model.Result;
 import hudson.model.Run;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import jenkins.model.Jenkins;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -72,10 +74,10 @@ public class JobNameColorColumn extends AbstractCompactColumn {
   }
 
   @SuppressWarnings("rawtypes")
-  public String getToolTip(Job job, Locale locale) {
+  public String getToolTip(Job job, Locale locale) throws IOException {
     StringBuilder tip = new StringBuilder();
     if (showDescription) {
-      String desc = job.getDescription();
+      String desc = Jenkins.get().getMarkupFormatter().translate(job.getDescription());
       if (!StringUtils.isEmpty(desc)) {
         tip.append(desc);
       }

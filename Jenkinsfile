@@ -1,4 +1,6 @@
-#!/usr/bin/env groovy
-
-/* `buildPlugin` step provided by: https://github.com/jenkins-infra/pipeline-library */
-buildPlugin()
+#!groovy
+def recentLTS = "2.277.4"
+buildPlugin(configurations: [
+  [ platform: "linux", jdk: "8", jenkins: null ],
+  [ platform: "windows", jdk: "8", jenkins: recentLTS, javaLevel: "8" ],
+])

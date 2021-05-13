@@ -24,10 +24,13 @@
 package com.robestone.hudson.compactcolumns;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.iterableWithSize;
 
 import hudson.model.View;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Collections;
 import javaposse.jobdsl.dsl.DslScriptLoader;
@@ -70,6 +73,6 @@ public class JobDSLTest {
   }
 
   private String readResource(String name) throws IOException {
-    return IOUtils.toString(JobDSLTest.class.getResourceAsStream(name));
+    return IOUtils.toString(JobDSLTest.class.getResourceAsStream(name), StandardCharsets.UTF_8);
   }
 }

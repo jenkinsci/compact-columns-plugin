@@ -23,7 +23,13 @@
  */
 package com.robestone.hudson.compactcolumns;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.TimeAgoType;
 import hudson.model.Job;
@@ -32,53 +38,62 @@ import hudson.model.Run;
 import hudson.util.ColorPalette;
 import java.awt.Color;
 import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class CompactColumnsTest {
 
+  private static final TimeZone SYSTEM_TIMEZONE = TimeZone.getDefault();
+  private static final TimeZone TEST_TIMEZONE = TimeZone.getTimeZone("GMT-5:00");
+  private static final Locale SYSTEM_LOCALE = Locale.getDefault();
+  private static final long TEST_TIME = 1277416568304L;
+  private static final LocalDateTime TEST_LOCALTIME =
+      LocalDateTime.ofInstant(Instant.ofEpochMilli(TEST_TIME), TEST_TIMEZONE.toZoneId());
+
   @Before
-  public void setUp() {
-    TimeZone.setDefault(TimeZone.getTimeZone("GMT-5:00"));
+  public void setSystemSettings() {
+    TimeZone.setDefault(TEST_TIMEZONE);
+    Locale.setDefault(Locale.US);
+  }
+
+  @After
+  public void resetSystemSettings() {
+    TimeZone.setDefault(SYSTEM_TIMEZONE);
+    Locale.setDefault(SYSTEM_LOCALE);
   }
 
   @Test
   public void testDateFormats() {
-    doTestDateFormats(Locale.US, DateFormat.SHORT, "6/24/10");
-    doTestDateFormats(Locale.US, DateFormat.MEDIUM, "Jun 24, 2010");
-    doTestDateFormats(Locale.GERMAN, DateFormat.SHORT, "24.06.10");
+    doTestDateFormats(Locale.US, equalTo("6/24/2010"));
+    doTestDateFormats(Locale.GERMAN, equalTo("24.06.2010"));
   }
 
-  public void doTestDateFormats(Locale locale, int formatType, String expect) {
-    DateFormat format = DateFormat.getDateInstance(formatType, locale);
-    long time = 1277416568304L;
-    Date date = new Date(time);
-    String output = format.format(date);
-    assertEquals(expect, output);
+  public void doTestDateFormats(Locale locale, Matcher<String> expect) {
+    String output = AbstractStatusesColumn.formatDate(TEST_LOCALTIME, locale);
+    assertThat(output, expect);
   }
 
   @Test
   public void testDateTimeFormats() {
-    doTestDateTimeFormats(Locale.US, DateFormat.SHORT, DateFormat.SHORT, "6/24/10 4:56 PM");
-    doTestDateTimeFormats(Locale.US, DateFormat.MEDIUM, DateFormat.SHORT, "Jun 24, 2010 4:56 PM");
-    doTestDateTimeFormats(Locale.GERMAN, DateFormat.SHORT, DateFormat.SHORT, "24.06.10 16:56");
+    doTestDateTimeFormats(
+        Locale.US, anyOf(equalTo("6/24/2010 4:56 PM"), equalTo("6/24/2010, 4:56 PM")));
+    doTestDateTimeFormats(
+        Locale.GERMAN, anyOf(equalTo("24.06.2010 16:56"), equalTo("24.06.2010, 16:56")));
   }
 
-  public void doTestDateTimeFormats(
-      Locale locale, int dateFormatType, int timeFormatType, String expect) {
-    DateFormat format = DateFormat.getDateTimeInstance(dateFormatType, timeFormatType, locale);
-    long time = 1277416568304L;
-    Date date = new Date(time);
-    String output = format.format(date);
-    assertEquals(expect, output);
+  public void doTestDateTimeFormats(Locale locale, Matcher expect) {
+    String output = AbstractStatusesColumn.formatDateTime(TEST_LOCALTIME, locale);
+    assertThat(output, expect);
   }
 
   /** Shows that all locale handling will be okay. */
@@ -86,7 +101,7 @@ public class CompactColumnsTest {
   public void testNoBadLocale() {
     Locale[] locales = Locale.getAvailableLocales();
     for (Locale locale : locales) {
-      String s = AbstractStatusesColumn.getBuildTimeString(1277416568304L, locale);
+      String s = AbstractStatusesColumn.getBuildTimeString(TEST_TIME, locale);
       assertNotNull(s);
     }
   }
@@ -98,24 +113,28 @@ public class CompactColumnsTest {
   }
 
   private void doTestShowDate(Locale locale, String expectTime, String expectDate) {
-    long time = 1277416568304L;
     String expectDateTime = expectTime + ", " + expectDate;
     String expectDateTimeLong = expectDate + " " + expectTime;
+    String expectDateTimeLongAlt = expectDate + ", " + expectTime;
 
     String ago;
 
     ago =
-        AbstractStatusesColumn.getTimeAgoString(locale, time, false, TimeAgoType.PREFER_DATE_TIME);
-    assertEquals(expectDateTimeLong, ago);
+        AbstractStatusesColumn.getTimeAgoString(
+            locale, TEST_TIME, false, TimeAgoType.PREFER_DATE_TIME);
+    assertThat(ago, is(anyOf(equalTo(expectDateTimeLong), equalTo(expectDateTimeLongAlt))));
 
-    ago = AbstractStatusesColumn.getTimeAgoString(locale, time, true, TimeAgoType.PREFER_DATE_TIME);
+    ago =
+        AbstractStatusesColumn.getTimeAgoString(
+            locale, TEST_TIME, true, TimeAgoType.PREFER_DATE_TIME);
     assertEquals(expectDate, ago);
 
-    ago = AbstractStatusesColumn.getTimeAgoString(locale, time, true, TimeAgoType.PREFER_DATES);
+    ago =
+        AbstractStatusesColumn.getTimeAgoString(locale, TEST_TIME, true, TimeAgoType.PREFER_DATES);
     assertEquals(expectDate, ago);
 
     // can't easily test this format with current API, but can do a negative test
-    ago = AbstractStatusesColumn.getTimeAgoString(locale, time, false, TimeAgoType.DIFF);
+    ago = AbstractStatusesColumn.getTimeAgoString(locale, TEST_TIME, false, TimeAgoType.DIFF);
     assertFalse(expectDate.equals(ago));
     assertFalse(expectDateTime.equals(ago));
     assertFalse(expectTime.equals(ago));
@@ -123,15 +142,15 @@ public class CompactColumnsTest {
 
   @Test
   public void testLocalizeDate() {
-    long time = 1277416568304L;
-    doTestLocalizeDate(time, Locale.ENGLISH, "4:56 PM, 6/24/2010");
-    doTestLocalizeDate(time, Locale.GERMAN, "16:56, 24.06.2010");
-    doTestLocalizeDate(time, Locale.CANADA, "4:56 PM, 24/06/2010");
+    doTestLocalizeDate(Locale.ENGLISH, equalTo("4:56 PM, 6/24/2010"));
+    doTestLocalizeDate(Locale.GERMAN, equalTo("16:56, 24.06.2010"));
+    doTestLocalizeDate(
+        Locale.CANADA, anyOf(equalTo("4:56 PM, 24/06/2010"), equalTo("4:56 p.m., 2010-06-24")));
   }
 
-  private void doTestLocalizeDate(long time, Locale locale, String expect) {
-    String found = AbstractStatusesColumn.getBuildTimeString(time, locale);
-    assertEquals(expect, found);
+  private void doTestLocalizeDate(Locale locale, Matcher expect) {
+    String formatted = AbstractStatusesColumn.getBuildTimeString(TEST_TIME, locale);
+    assertThat(formatted, expect);
   }
 
   /** This just shows the weird way the Hudson.util is working. */

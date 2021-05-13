@@ -384,24 +384,24 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     float number;
     if (time >= ONE_YEAR_MS) {
       number = getRoundedNumber(time / ONE_YEAR_MS);
-      ts = hudson.Messages.Util_year(number);
+      ts = Messages.util_year(number);
     } else if (time >= ONE_MONTH_MS) {
       number = getRoundedNumber(time / ONE_MONTH_MS);
-      ts = hudson.Messages.Util_month(number);
+      ts = Messages.util_month(number);
     } else if (time >= ONE_DAY_MS) {
       number = getRoundedNumber(time / ONE_DAY_MS);
-      ts = hudson.Messages.Util_day(number);
+      ts = Messages.util_day(number);
     } else if (time >= ONE_HOUR_MS) {
       number = getRoundedNumber(time / ONE_HOUR_MS);
-      ts = hudson.Messages.Util_hour(number);
+      ts = Messages.util_hour(number);
     } else if (time >= ONE_MINUTE_MS) {
       number = getRoundedNumber(time / ONE_MINUTE_MS);
-      ts = hudson.Messages.Util_minute(number);
+      ts = Messages.util_minute(number);
     } else if (time >= ONE_SECOND_MS) {
       number = getRoundedNumber(time / ONE_SECOND_MS);
-      ts = hudson.Messages.Util_second(number);
+      ts = Messages.util_second(number);
     } else {
-      ts = hudson.Messages.Util_second(0);
+      ts = Messages.util_second(0);
     }
     return ts;
   }
@@ -416,16 +416,16 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     return new BigDecimal(number).setScale(scale, BigDecimal.ROUND_HALF_DOWN).floatValue();
   }
 
+  public static final String getAbortedMessage() {
+    return Messages.ballColor_Aborted();
+  }
+
   public static final String getFailedMessage() {
-    return hudson.model.Messages.BallColor_Failed();
+    return Messages.ballColor_Failed();
   }
 
   public static final String getUnstableMessage() {
-    return hudson.model.Messages.BallColor_Unstable();
-  }
-
-  public static final String getAbortedMessage() {
-    return hudson.model.Messages.BallColor_Aborted();
+    return Messages.ballColor_Unstable();
   }
 
   public static final String getBuildDescriptionToolTip(BuildInfo build, Locale locale) {
@@ -453,7 +453,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
   }
 
   public static final String getStableMessage() {
-    String message = hudson.model.Messages.Run_Summary_Stable();
+    String message = Messages.run_summary_stable();
     if (message != null && message.length() > 1) {
       // this logic is here solely so I can re-use the "stable" messages, but make it capitalized
       char c = message.charAt(0);

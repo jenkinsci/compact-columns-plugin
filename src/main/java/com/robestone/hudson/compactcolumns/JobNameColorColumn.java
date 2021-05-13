@@ -125,7 +125,7 @@ public class JobNameColorColumn extends AbstractCompactColumn {
   @Symbol("compactJobNameColor")
   public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
     public String getColumnDisplayName() {
-      return hudson.views.Messages.JobColumn_DisplayName();
+      return Messages.jobColumn_displayName();
     }
 
     @Override

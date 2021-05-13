@@ -28,12 +28,17 @@ import hudson.model.Result;
 import hudson.model.Run;
 import hudson.views.ListViewColumnDescriptor;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.chrono.Chronology;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -317,55 +322,50 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 
   protected static String getBuildTimeString(
       long timeMs, Locale locale, boolean addDate, boolean addTime, boolean useDefaultFormat) {
-    Date time = new Date(timeMs);
+    // FIXME: System time zone vs. browser time zone
+    LocalDateTime time =
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(timeMs), ZoneId.systemDefault());
 
     if (addTime && addDate && useDefaultFormat) {
-      DateFormat dateFormat = getDateTimePattern(locale);
-      String dateString = dateFormat.format(time);
-      return dateString;
+      return formatDateTime(time, locale);
     } else {
       StringBuilder buf = new StringBuilder();
       if (addTime) {
-        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-        String timeString = timeFormat.format(time);
-        buf.append(timeString);
+        buf.append(formatTime(time, locale));
       }
       if (addDate) {
-        DateFormat dateFormat = getDatePattern(locale);
-        String dateString = dateFormat.format(time);
-
         if (buf.length() > 0) {
           buf.append(", ");
         }
-        buf.append(dateString);
+        buf.append(formatDate(time, locale));
       }
       return buf.toString();
     }
   }
 
   /** I want to use 4-digit years (for clarity), and that doesn't work out of the box... */
-  protected static DateFormat getDatePattern(Locale locale) {
-    DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-    return getDatePattern(format, locale);
+  protected static String formatDate(TemporalAccessor date, Locale locale) {
+    return getFormatter(Chronology.from(date), locale, FormatStyle.SHORT, null).format(date);
   }
 
-  protected static DateFormat getDateTimePattern(Locale locale) {
-    DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
-    return getDatePattern(format, locale);
+  protected static String formatDateTime(TemporalAccessor date, Locale locale) {
+    return getFormatter(Chronology.from(date), locale, FormatStyle.SHORT, FormatStyle.SHORT)
+        .format(date);
   }
 
-  private static DateFormat getDatePattern(DateFormat format, Locale locale) {
-    if (format instanceof SimpleDateFormat) {
-      String s = ((SimpleDateFormat) format).toPattern();
-      if (!s.contains("yyyy")) {
-        s = s.replace("yy", "yyyy");
-      }
-      DateFormat dateFormat = new SimpleDateFormat(s, locale);
-      return dateFormat;
-    } else {
-      // shown by unit test to not be a problem...
-      throw new IllegalArgumentException("Can't handle locale: " + locale);
+  protected static String formatTime(TemporalAccessor date, Locale locale) {
+    return getFormatter(Chronology.from(date), locale, null, FormatStyle.SHORT).format(date);
+  }
+
+  private static DateTimeFormatter getFormatter(
+      Chronology chronology, Locale locale, FormatStyle dateStyle, FormatStyle timeStyle) {
+    String pattern =
+        DateTimeFormatterBuilder.getLocalizedDateTimePattern(
+            dateStyle, timeStyle, chronology, locale);
+    if (!pattern.contains("yyyy")) {
+      pattern = pattern.replace("yy", "yyyy");
     }
+    return new DateTimeFormatterBuilder().appendPattern(pattern).toFormatter(locale);
   }
 
   /**

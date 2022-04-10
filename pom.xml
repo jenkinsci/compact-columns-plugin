@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>compact-columns</artifactId>
-  <version>${revision}${changelist}</version>
+  <version>${revision}.${changelist}</version>
   <packaging>hpi</packaging>
 
   <name>Compact Columns</name>
@@ -42,8 +42,8 @@
   </scm>
 
   <properties>
-    <revision>1.14</revision>
-    <changelist>-SNAPSHOT</changelist>
+    <revision>1</revision>
+    <changelist>999999-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <jenkins.version>2.204</jenkins.version>
     <java.level>8</java.level>

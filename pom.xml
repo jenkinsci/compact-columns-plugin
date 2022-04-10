@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: MIT -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -14,10 +15,8 @@
   <packaging>hpi</packaging>
 
   <name>Compact Columns</name>
-  <description>
-    More compact columns for showing last success and failure.
-    Easier to understand, and takes less room in your view.
-  </description>
+  <description>More compact columns for showing last success and failure.
+    Easier to understand, and takes less room in your view.</description>
   <url>https://github.com/jenkinsci/compact-columns-plugin</url>
   <licenses>
     <license>
@@ -37,8 +36,8 @@
   <scm>
     <connection>scm:git:https://github.com/${gitHubRepo}.git</connection>
     <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
-    <url>https://github.com/${gitHubRepo}</url>
     <tag>${scmTag}</tag>
+    <url>https://github.com/${gitHubRepo}</url>
   </scm>
 
   <properties>
@@ -81,14 +80,34 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.coveo</groupId>
-        <artifactId>fmt-maven-plugin</artifactId>
-        <version>2.9.1</version>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>2.22.1</version>
+        <configuration>
+          <java>
+            <endWithNewline />
+            <importOrder />
+            <removeUnusedImports />
+            <googleJavaFormat>
+              <!-- Last version that supports Java 8, the plugin does handle this internally
+              but it will give different versions based off of the JVM version, not good for CI -->
+              <version>1.7</version>
+            </googleJavaFormat>
+          </java>
+          <pom>
+            <sortPom>
+              <expandEmptyElements>false</expandEmptyElements>
+              <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+            </sortPom>
+          </pom>
+        </configuration>
         <executions>
           <execution>
             <goals>
+              <!-- Can be disabled using -Dspotless.check.skip -->
               <goal>check</goal>
             </goals>
+            <phase>validate</phase>
           </execution>
         </executions>
       </plugin>

@@ -9,14 +9,20 @@
       method="getStableMessage" />
 
   <j:invokeStatic var="color_stable" className="com.robestone.hudson.compactcolumns.BuildInfo"
-      method="getStableColorString" />
+      method="getStableColor" />
   <j:invokeStatic var="color_unstable" className="com.robestone.hudson.compactcolumns.BuildInfo"
-      method="getUnstableColorString" />
+      method="getUnstableColor" />
   <j:invokeStatic var="color_failed" className="com.robestone.hudson.compactcolumns.BuildInfo"
-      method="getFailedColorString" />
+      method="getFailedColor" />
 
   <th tooltip=
       "&lt;span style='text-decoration: underline; color: ${color_failed}'&gt;${message_failed}&lt;/span&gt;;
+     &lt;span style='text-decoration: underline; color: ${color_unstable}'&gt;${message_unstable}&lt;/span&gt;;
+     &lt;span style='text-decoration: underline; color: ${color_stable}'&gt;${message_stable}&lt;/span&gt;
+    &lt;br/&gt;
+	&lt;b&gt;${%More Recent}&lt;/b&gt; &gt; ${%Less Recent}"
+      html-tooltip=
+              "&lt;span style='text-decoration: underline; color: ${color_failed}'&gt;${message_failed}&lt;/span&gt;;
      &lt;span style='text-decoration: underline; color: ${color_unstable}'&gt;${message_unstable}&lt;/span&gt;;
      &lt;span style='text-decoration: underline; color: ${color_stable}'&gt;${message_stable}&lt;/span&gt;
     &lt;br/&gt;

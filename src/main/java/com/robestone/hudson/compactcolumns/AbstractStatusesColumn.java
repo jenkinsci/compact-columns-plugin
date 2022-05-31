@@ -104,7 +104,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
       BuildInfo aborted =
           createBuildInfo(
               getLastAbortedBuild(job),
-              BuildInfo.OTHER_COLOR,
+              BuildInfo.getOtherColor(),
               OTHER_UNDERLINE_STYLE,
               getAbortedMessage(),
               null,
@@ -167,7 +167,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     } else if (!onlyIfLastCompleted || (lastCompletedBuild.number == lastFailedBuild.number)) {
       return createBuildInfo(
           job.getLastFailedBuild(),
-          BuildInfo.FAILED_COLOR,
+          BuildInfo.getFailedColor(),
           FAILED_UNDERLINE_STYLE,
           getFailedMessage(),
           "lastFailedBuild",
@@ -189,7 +189,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
       TimeAgoType timeAgoType) {
     return createBuildInfo(
         job.getLastStableBuild(),
-        BuildInfo.getStableColorString(),
+        BuildInfo.getStableColor(),
         STABLE_UNDERLINE_STYLE,
         getStableMessage(),
         "lastStableBuild",
@@ -221,7 +221,7 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 
     return createBuildInfo(
         lastUnstable,
-        BuildInfo.UNSTABLE_COLOR,
+        BuildInfo.getUnstableColor(),
         UNSTABLE_UNDERLINE_STYLE,
         getUnstableMessage(),
         String.valueOf(lastUnstable.number),
@@ -435,7 +435,8 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     buf.append(build.getRun().number);
     buf.append(build.getLatestBuildString(locale));
     buf.append("</u></b>\n");
-    buf.append("<ul>\n");
+    buf.append(
+        "<ul class=\"jenkins-!-margin-0 jenkins-!-margin-top-1 jenkins-!-padding-0\" style=\"list-style-position: inside\">\n");
     buf.append("<li>");
     buf.append(build.getBuiltAt(locale));
     buf.append("</li>\n");

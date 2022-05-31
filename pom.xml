@@ -44,16 +44,22 @@
     <revision>1</revision>
     <changelist>999999-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
-    <jenkins.version>2.350-rc32411.186041cf1c8b_</jenkins.version>
+    <jenkins.version>2.332</jenkins.version>
     <java.level>8</java.level>
     <doclint>all</doclint>
   </properties>
 
   <dependencies>
     <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>symbol-annotation</artifactId>
+      <version>1.21</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>job-dsl</artifactId>
-      <version>1.77</version>
+      <version>1.79</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

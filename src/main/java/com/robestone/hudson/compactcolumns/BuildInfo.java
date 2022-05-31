@@ -7,10 +7,10 @@ import java.util.Objects;
 /** @author jacob robertson */
 public class BuildInfo implements Comparable<BuildInfo> {
 
-  private static final String STABLE_COLOR = "var(--success-color, green)";
-  private static final String UNSTABLE_COLOR = "var(--warning-color, orange)";
-  private static final String FAILED_COLOR = "var(--error-color, red)";
-  private static final String OTHER_COLOR = "var(--text-color-secondary, grey)";
+  private static final String STABLE_COLOR = "var(--success-color, green) !important";
+  private static final String UNSTABLE_COLOR = "var(--warning-color, orange) !important";
+  private static final String FAILED_COLOR = "var(--error-color, red) !important";
+  private static final String OTHER_COLOR = "var(--text-color-secondary, grey) !important";
 
   private final Run<?, ?> run;
   private String color;

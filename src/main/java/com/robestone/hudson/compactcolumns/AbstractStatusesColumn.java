@@ -436,19 +436,19 @@ public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
     buf.append(build.getLatestBuildString(locale));
     buf.append("</u></b>\n");
     buf.append(
-        "<ul class=\"jenkins-!-margin-0 jenkins-!-margin-top-1 jenkins-!-padding-0\" style=\"list-style-position: inside\">\n");
+        "<ul class=\"jenkins-!-margin-0 jenkins-!-margin-top-1 jenkins-!-padding-0\" style=\"list-style-position: inside\">");
     buf.append("<li>");
     buf.append(build.getBuiltAt(locale));
-    buf.append("</li>\n");
+    buf.append("</li>");
     buf.append("<li>");
     buf.append(build.getStartedAgo(locale));
-    buf.append("</li>\n");
+    buf.append("</li>");
     buf.append("<li>");
     buf.append(build.getLastedDuration(locale));
-    buf.append("</li>\n");
+    buf.append("</li>");
     buf.append("<li><b>");
     buf.append(build.getStatus());
-    buf.append("</b></li>\n");
+    buf.append("</b></li>");
     buf.append("</ul>");
     return buf.toString();
   }

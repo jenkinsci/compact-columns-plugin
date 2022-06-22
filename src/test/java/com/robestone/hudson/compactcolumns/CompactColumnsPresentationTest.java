@@ -8,6 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import hudson.model.FreeStyleProject;
@@ -38,7 +39,8 @@ public class CompactColumnsPresentationTest {
     JenkinsRule.WebClient wc = j.createWebClient();
     HtmlPage page = wc.goTo("view/testView/");
     DomElement table = page.getElementById("projectstatus");
-    for (DomElement row : table.getElementsByTagName("tr")) {
+    for (DomNode node : table.querySelectorAll("tbody tr")) {
+      DomElement row = (DomElement) node;
       if (!row.getAttribute("class").contains("header")) {
         validateRow(row);
       }

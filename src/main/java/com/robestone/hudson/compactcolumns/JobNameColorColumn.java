@@ -42,25 +42,25 @@ public class JobNameColorColumn extends AbstractCompactColumn {
     String color;
     String underline;
     if (result == null) {
-      color = BuildInfo.OTHER_COLOR;
+      color = BuildInfo.getOtherColor();
       underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
     } else if (Result.ABORTED.equals(result)) {
-      color = BuildInfo.OTHER_COLOR;
+      color = BuildInfo.getOtherColor();
       underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
     } else if (Result.FAILURE.equals(result)) {
-      color = BuildInfo.FAILED_COLOR;
+      color = BuildInfo.getFailedColor();
       underline = AbstractStatusesColumn.FAILED_UNDERLINE_STYLE;
     } else if (Result.NOT_BUILT.equals(result)) {
-      color = BuildInfo.OTHER_COLOR;
+      color = BuildInfo.getOtherColor();
       underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
     } else if (Result.SUCCESS.equals(result)) {
-      color = BuildInfo.getStableColorString();
+      color = BuildInfo.getStableColor();
       underline = AbstractStatusesColumn.STABLE_UNDERLINE_STYLE;
     } else if (Result.UNSTABLE.equals(result)) {
-      color = BuildInfo.UNSTABLE_COLOR;
+      color = BuildInfo.getUnstableColor();
       underline = AbstractStatusesColumn.UNSTABLE_UNDERLINE_STYLE;
     } else {
-      color = BuildInfo.OTHER_COLOR;
+      color = BuildInfo.getOtherColor();
       underline = AbstractStatusesColumn.OTHER_UNDERLINE_STYLE;
     }
     String style = "";

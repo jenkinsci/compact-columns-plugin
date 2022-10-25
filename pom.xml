@@ -44,8 +44,7 @@
     <revision>1</revision>
     <changelist>999999-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
-    <jenkins.version>2.332</jenkins.version>
-    <java.level>8</java.level>
+    <jenkins.version>2.332.4</jenkins.version>
     <doclint>all</doclint>
   </properties>
 

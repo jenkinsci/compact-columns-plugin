@@ -25,7 +25,6 @@ package com.robestone.hudson.compactcolumns;
 
 import hudson.views.ListViewColumn;
 
-/** @author jacob robertson */
 public abstract class AbstractCompactColumn extends ListViewColumn {
 
   static final String colorblindHint_Underline = "underlinehint";

@@ -14,7 +14,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-/** @author jacob robertson */
 public class JobNameColorColumn extends AbstractCompactColumn {
 
   private boolean showColor;

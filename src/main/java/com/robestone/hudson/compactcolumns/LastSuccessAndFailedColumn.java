@@ -27,7 +27,6 @@ import hudson.Extension;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-/** @author jacob robertson */
 public class LastSuccessAndFailedColumn extends AbstractStatusesColumn {
   @DataBoundConstructor
   public LastSuccessAndFailedColumn() {

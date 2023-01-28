@@ -4,7 +4,6 @@ import hudson.model.Run;
 import java.util.Locale;
 import java.util.Objects;
 
-/** @author jacob robertson */
 public class BuildInfo implements Comparable<BuildInfo> {
 
   private static final String STABLE_COLOR = "var(--success-color, green) !important";

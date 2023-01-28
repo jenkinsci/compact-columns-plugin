@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-/** @author jacob robertson */
 public abstract class AbstractStatusesColumn extends AbstractCompactColumn {
 
   public static final String OTHER_UNDERLINE_STYLE = "1px dashed";

@@ -6,7 +6,6 @@ import hudson.views.JobColumn;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-/** @author jacob robertson */
 public class JobNameColumn extends JobColumn {
 
   @DataBoundConstructor

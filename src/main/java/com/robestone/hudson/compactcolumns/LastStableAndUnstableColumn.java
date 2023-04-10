@@ -28,27 +28,27 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class LastStableAndUnstableColumn extends AbstractStatusesColumn {
-  @DataBoundConstructor
-  public LastStableAndUnstableColumn() {
-    super(null, null);
-  }
-
-  @Override
-  protected boolean isFailedShownOnlyIfLast() {
-    return true;
-  }
-
-  @Override
-  protected boolean isUnstableShownOnlyIfLast() {
-    return false;
-  }
-
-  @Extension
-  @Symbol("compactLastStableAndUnstable")
-  public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
-    @Override
-    public String getDisplayName() {
-      return Messages.Compact_Column_Unstable_Stable();
+    @DataBoundConstructor
+    public LastStableAndUnstableColumn() {
+        super(null, null);
     }
-  }
+
+    @Override
+    protected boolean isFailedShownOnlyIfLast() {
+        return true;
+    }
+
+    @Override
+    protected boolean isUnstableShownOnlyIfLast() {
+        return false;
+    }
+
+    @Extension
+    @Symbol("compactLastStableAndUnstable")
+    public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
+        @Override
+        public String getDisplayName() {
+            return Messages.Compact_Column_Unstable_Stable();
+        }
+    }
 }

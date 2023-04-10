@@ -29,46 +29,46 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 public class AllStatusesColumn extends AbstractStatusesColumn {
 
-  private boolean onlyShowLastStatus;
-  private int hideDays;
+    private boolean onlyShowLastStatus;
+    private int hideDays;
 
-  @DataBoundConstructor
-  public AllStatusesColumn(
-      String colorblindHint, boolean onlyShowLastStatus, String timeAgoTypeString, int hideDays) {
-    super(colorblindHint, timeAgoTypeString);
-    this.onlyShowLastStatus = onlyShowLastStatus;
-    this.hideDays = hideDays;
-  }
+    @DataBoundConstructor
+    public AllStatusesColumn(
+            String colorblindHint, boolean onlyShowLastStatus, String timeAgoTypeString, int hideDays) {
+        super(colorblindHint, timeAgoTypeString);
+        this.onlyShowLastStatus = onlyShowLastStatus;
+        this.hideDays = hideDays;
+    }
 
-  public int getHideDays() {
-    return hideDays;
-  }
-
-  @Override
-  protected boolean isFailedShownOnlyIfLast() {
-    return false;
-  }
-
-  @Override
-  protected boolean isUnstableShownOnlyIfLast() {
-    return false;
-  }
-
-  public boolean isOnlyShowLastStatus() {
-    return onlyShowLastStatus;
-  }
-
-  @Extension
-  @Symbol("compactAllStatuses")
-  public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
-    @Override
-    public String getDisplayName() {
-      return Messages.Compact_Column_Statuses_w_Options();
+    public int getHideDays() {
+        return hideDays;
     }
 
     @Override
-    public String getHelpFile() {
-      return "/plugin/compact-columns/all-statuses-column.html";
+    protected boolean isFailedShownOnlyIfLast() {
+        return false;
     }
-  }
+
+    @Override
+    protected boolean isUnstableShownOnlyIfLast() {
+        return false;
+    }
+
+    public boolean isOnlyShowLastStatus() {
+        return onlyShowLastStatus;
+    }
+
+    @Extension
+    @Symbol("compactAllStatuses")
+    public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
+        @Override
+        public String getDisplayName() {
+            return Messages.Compact_Column_Statuses_w_Options();
+        }
+
+        @Override
+        public String getHelpFile() {
+            return "/plugin/compact-columns/all-statuses-column.html";
+        }
+    }
 }

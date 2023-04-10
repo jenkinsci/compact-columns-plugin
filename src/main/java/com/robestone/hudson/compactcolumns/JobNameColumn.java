@@ -8,19 +8,19 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 public class JobNameColumn extends JobColumn {
 
-  @DataBoundConstructor
-  public JobNameColumn() {}
+    @DataBoundConstructor
+    public JobNameColumn() {}
 
-  @Extension
-  @Symbol("compactJobName")
-  public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
-    public String getColumnDisplayName() {
-      return Messages.jobColumn_displayName();
-    }
+    @Extension
+    @Symbol("compactJobName")
+    public static class DescriptorImpl extends AbstractCompactColumnDescriptor {
+        public String getColumnDisplayName() {
+            return Messages.jobColumn_displayName();
+        }
 
-    @Override
-    public String getDisplayName() {
-      return Messages.Compact_Column_Job_Name();
+        @Override
+        public String getDisplayName() {
+            return Messages.Compact_Column_Job_Name();
+        }
     }
-  }
 }

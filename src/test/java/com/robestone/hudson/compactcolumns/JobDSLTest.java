@@ -41,38 +41,39 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
 public class JobDSLTest {
-  @ClassRule public static JenkinsRule j = new JenkinsRule();
+    @ClassRule
+    public static JenkinsRule j = new JenkinsRule();
 
-  @Test
-  // This test makes sure that JobDSL scripts using automatically generated names work
-  public void testAutomaticJobDsl() throws IOException {
-    doTest("automatic");
-  }
+    @Test
+    // This test makes sure that JobDSL scripts using automatically generated names work
+    public void testAutomaticJobDsl() throws IOException {
+        doTest("automatic");
+    }
 
-  @Test
-  // This test makes sure that JobDSL scripts using symbol annotations work
-  public void testSymbolJobDsl() throws IOException {
-    doTest("symbol");
-  }
+    @Test
+    // This test makes sure that JobDSL scripts using symbol annotations work
+    public void testSymbolJobDsl() throws IOException {
+        doTest("symbol");
+    }
 
-  private void doTest(String type) throws IOException {
-    JenkinsJobManagement m =
-        new JenkinsJobManagement(System.out, Collections.emptyMap(), Paths.get(".").toFile());
-    new DslScriptLoader(m).runScript(readResource("/" + type + "JobDSL.groovy"));
+    private void doTest(String type) throws IOException {
+        JenkinsJobManagement m = new JenkinsJobManagement(
+                System.out, Collections.emptyMap(), Paths.get(".").toFile());
+        new DslScriptLoader(m).runScript(readResource("/" + type + "JobDSL.groovy"));
 
-    View legacyView = j.jenkins.getView(type + "View");
-    assertThat(legacyView.getColumns(), iterableWithSize(5));
-    assertThat(
-        legacyView.getColumns(),
-        contains(
-            instanceOf(AllStatusesColumn.class),
-            instanceOf(JobNameColorColumn.class),
-            instanceOf(JobNameColumn.class),
-            instanceOf(LastStableAndUnstableColumn.class),
-            instanceOf(LastSuccessAndFailedColumn.class)));
-  }
+        View legacyView = j.jenkins.getView(type + "View");
+        assertThat(legacyView.getColumns(), iterableWithSize(5));
+        assertThat(
+                legacyView.getColumns(),
+                contains(
+                        instanceOf(AllStatusesColumn.class),
+                        instanceOf(JobNameColorColumn.class),
+                        instanceOf(JobNameColumn.class),
+                        instanceOf(LastStableAndUnstableColumn.class),
+                        instanceOf(LastSuccessAndFailedColumn.class)));
+    }
 
-  private String readResource(String name) throws IOException {
-    return IOUtils.toString(JobDSLTest.class.getResourceAsStream(name), StandardCharsets.UTF_8);
-  }
+    private String readResource(String name) throws IOException {
+        return IOUtils.toString(JobDSLTest.class.getResourceAsStream(name), StandardCharsets.UTF_8);
+    }
 }

@@ -27,20 +27,20 @@ import hudson.views.ListViewColumn;
 
 public abstract class AbstractCompactColumn extends ListViewColumn {
 
-  static final String colorblindHint_Underline = "underlinehint";
-  static final String colorblindHint_none = "nohint";
+    static final String colorblindHint_Underline = "underlinehint";
+    static final String colorblindHint_none = "nohint";
 
-  private String colorblindHint;
+    private String colorblindHint;
 
-  public AbstractCompactColumn(String colorblindHint) {
-    this.colorblindHint = colorblindHint;
-  }
+    public AbstractCompactColumn(String colorblindHint) {
+        this.colorblindHint = colorblindHint;
+    }
 
-  public String getColorblindHint() {
-    return colorblindHint;
-  }
+    public String getColorblindHint() {
+        return colorblindHint;
+    }
 
-  public boolean isShowColorblindUnderlineHint() {
-    return colorblindHint_Underline.equals(colorblindHint);
-  }
+    public boolean isShowColorblindUnderlineHint() {
+        return colorblindHint_Underline.equals(colorblindHint);
+    }
 }

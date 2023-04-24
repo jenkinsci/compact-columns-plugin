@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.59</version>
+    <version>4.61</version>
     <relativePath />
   </parent>
 
@@ -46,6 +46,7 @@
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <jenkins.version>2.361.1</jenkins.version>
     <doclint>all</doclint>
+    <spotless.check.skip>false</spotless.check.skip>
   </properties>
 
   <dependencies>

@@ -5,7 +5,7 @@
        class="jenkins-table__link"
         tooltip="${empty(job.description) ? null :
          app.markupFormatter.translate(job.description)}"
-       html-tooltip="${empty(job.description) ? null :
+       data-html-tooltip="${empty(job.description) ? null :
          app.markupFormatter.translate(job.description)}">
       ${job.getRelativeDisplayNameFrom(itemGroup)}
     </a>

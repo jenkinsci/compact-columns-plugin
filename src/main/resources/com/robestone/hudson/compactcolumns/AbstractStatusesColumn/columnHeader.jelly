@@ -25,7 +25,7 @@
     </div>
     <div class="jenkins-!-margin-top-1"><b>${%More Recent}</b> > ${%Less Recent}</div>
   </j:set>
-  <th tooltip="${tooltip}" html-tooltip="${tooltip}">
+  <th tooltip="${tooltip}" data-html-tooltip="${tooltip}">
     ${%Last Statuses}
   </th>
 </j:jelly>

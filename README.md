@@ -5,7 +5,7 @@
 [![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/compact-columns.svg?color=blue)](https://plugins.jenkins.io/compact-columns)
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins%2Fcompact-columns-plugin%2Fmain)](https://ci.jenkins.io/job/Plugins/job/compact-columns-plugin/job/main/)
 [![GitHub license](https://img.shields.io/github/license/jenkinsci/compact-columns-plugin.svg)](https://github.com/jenkinsci/compact-columns-plugin/blob/master/LICENSE)
-[![Maintenance](https://img.shields.io/maintenance/yes/2023.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2024.svg)]()
 
 More compact columns for showing last success and failure.
 Easier to understand, and takes less room in your view.
@@ -105,7 +105,7 @@ and another view that has the color turned off.
 
 If you want to contribute to this plugin, you probably will need a Jenkins
 plugin developement environment. This basically means a current version of Java
-(Java 8 should probably be okay for now) and [Apache Maven]. See the
+(Java 17 should probably be okay for now) and [Apache Maven]. See the
 [Jenkins Plugin Tutorial] for details.
 
 If you have the proper environment, typing:
@@ -115,7 +115,7 @@ If you have the proper environment, typing:
 should create a plugin as `target/*.hpi`, which you can install in your Jenkins
 instance. Running
 
-    $ mvn hpi:run -Djenkins.version=2.164.1
+    $ mvn hpi:run -Djenkins.version=2.452.2
 
 allows you to spin up a test Jenkins instance on [localhost] to test your
 local changes before commiting.

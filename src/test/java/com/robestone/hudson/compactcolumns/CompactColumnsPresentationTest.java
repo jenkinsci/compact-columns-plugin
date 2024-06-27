@@ -1,11 +1,9 @@
 /* SPDX-License-Identifier: MIT
- *
- * Copyright (c) 2020, Tobias Gruetzmacher
+ * SPDX-FileCopyrightText: © 2020 Tobias Gruetzmacher
  */
 package com.robestone.hudson.compactcolumns;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import hudson.model.FreeStyleProject;
 import hudson.model.ListView;
@@ -18,24 +16,23 @@ import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomNode;
 import org.htmlunit.html.HtmlAnchor;
 import org.htmlunit.html.HtmlPage;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockFolder;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class CompactColumnsPresentationTest {
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
+@WithJenkins
+class CompactColumnsPresentationTest {
 
     /** Compares the text of the standard name column with our custom name column. */
     @Test
-    public void testJobColumnText() throws Exception {
+    void jobColumnText(JenkinsRule j) throws Exception {
         MockFolder folder = j.createFolder("folder1");
         folder.createProject(FreeStyleProject.class, "folderJob");
         j.createFreeStyleProject("rootJob");
 
-        createTestView();
+        createTestView(j);
 
         JenkinsRule.WebClient wc = j.createWebClient();
         HtmlPage page = wc.goTo("view/testView/");
@@ -48,7 +45,7 @@ public class CompactColumnsPresentationTest {
         }
     }
 
-    private void createTestView() throws IOException {
+    private void createTestView(JenkinsRule j) throws IOException {
         ListView v = new ListView("testView");
         v.setRecurse(true);
         v.setIncludeRegex(".*");
@@ -65,29 +62,29 @@ public class CompactColumnsPresentationTest {
             if (origName == null) {
                 origName = link.getTextContent();
             } else {
-                assertThat(link.getTextContent(), is(equalTo(origName)));
+                assertThat(link.getTextContent()).isEqualTo(origName);
             }
         }
     }
 
     @Test
     @Issue("SECURITY-1837")
-    public void testTooltipIsEscaped() throws Exception {
+    void tooltipIsEscaped(JenkinsRule j) throws Exception {
         FreeStyleProject p = j.createFreeStyleProject("proj1");
         p.setDescription("<i/onmouseover=confirm(1)>test");
 
-        createTestView();
+        createTestView(j);
         HtmlPage page = j.createWebClient().goTo("view/testView/");
 
         List<HtmlAnchor> links = page.getAnchors().stream()
                 .filter(a -> a.getHrefAttribute().endsWith("/proj1/") && a.hasAttribute("tooltip"))
                 .collect(Collectors.toList());
-        assertThat(links, hasSize(2));
+        assertThat(links).hasSize(2);
         for (HtmlAnchor link : links) {
             String tooltip = link.getAttribute("tooltip");
             // The default formatter just escapes all HTML
-            assertThat(tooltip, not(containsString("<i")));
-            assertThat(tooltip, startsWith("&lt;i"));
+            assertThat(tooltip).doesNotContain("<i");
+            assertThat(tooltip).startsWith("&lt;i");
         }
     }
 }

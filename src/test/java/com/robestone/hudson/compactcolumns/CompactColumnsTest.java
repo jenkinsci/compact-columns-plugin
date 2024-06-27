@@ -1,35 +1,10 @@
-/*
- * The MIT License
- *
- * Copyright (c) 2009, Sun Microsystems, Inc., Jesse Glick
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+/* SPDX-License-Identifier: MIT
+ * SPDX-FileCopyrightText: © 2009, Sun Microsystems, Inc., Jesse Glick
+ * SPDX-FileCopyrightText: © 2024 Tobias Gruetzmacher
  */
 package com.robestone.hudson.compactcolumns;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.robestone.hudson.compactcolumns.AbstractStatusesColumn.TimeAgoType;
 import hudson.model.Job;
@@ -37,19 +12,23 @@ import hudson.model.Result;
 import hudson.model.Run;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-public class CompactColumnsTest {
+class CompactColumnsTest {
 
+    // Unicode Character 'NARROW NO-BREAK SPACE' (U+202F)
+    private static final char NARROW_NBSP = '\u202F';
     private static final TimeZone SYSTEM_TIMEZONE = TimeZone.getDefault();
     private static final TimeZone TEST_TIMEZONE = TimeZone.getTimeZone("GMT-5:00");
     private static final Locale SYSTEM_LOCALE = Locale.getDefault();
@@ -57,94 +36,99 @@ public class CompactColumnsTest {
     private static final LocalDateTime TEST_LOCALTIME =
             LocalDateTime.ofInstant(Instant.ofEpochMilli(TEST_TIME), TEST_TIMEZONE.toZoneId());
 
-    @Before
-    public void setSystemSettings() {
+    @BeforeEach
+    void setSystemSettings() {
         TimeZone.setDefault(TEST_TIMEZONE);
         Locale.setDefault(Locale.US);
     }
 
-    @After
-    public void resetSystemSettings() {
+    @AfterEach
+    void resetSystemSettings() {
         TimeZone.setDefault(SYSTEM_TIMEZONE);
         Locale.setDefault(SYSTEM_LOCALE);
     }
 
     @Test
-    public void testDateFormats() {
-        doTestDateFormats(Locale.US, equalTo("6/24/2010"));
-        doTestDateFormats(Locale.GERMAN, equalTo("24.06.2010"));
+    void dateFormats() {
+        assertThat(Locale.US).extracting(this::formatDate).isEqualTo("6/24/2010");
+        assertThat(Locale.GERMAN).extracting(this::formatDate).isEqualTo("24.06.2010");
     }
 
-    public void doTestDateFormats(Locale locale, Matcher<String> expect) {
-        String output = AbstractStatusesColumn.formatDate(TEST_LOCALTIME, locale);
-        assertThat(output, expect);
+    private String formatDate(Locale locale) {
+        return AbstractStatusesColumn.formatDate(TEST_LOCALTIME, locale);
     }
 
     @Test
-    public void testDateTimeFormats() {
-        doTestDateTimeFormats(Locale.US, anyOf(equalTo("6/24/2010 4:56 PM"), equalTo("6/24/2010, 4:56 PM")));
-        doTestDateTimeFormats(Locale.GERMAN, anyOf(equalTo("24.06.2010 16:56"), equalTo("24.06.2010, 16:56")));
+    void dateTimeFormats() {
+        assertThat(formatDateTime(Locale.US))
+                .containsAnyOf("6/24/2010, 4:56" + NARROW_NBSP + "PM", "6/24/2010, 4:56 PM");
+        assertThat(formatDateTime(Locale.GERMAN)).containsAnyOf("24.06.2010 16:56", "24.06.2010, 16:56");
     }
 
-    public void doTestDateTimeFormats(Locale locale, Matcher expect) {
-        String output = AbstractStatusesColumn.formatDateTime(TEST_LOCALTIME, locale);
-        assertThat(output, expect);
+    private String formatDateTime(Locale locale) {
+        return AbstractStatusesColumn.formatDateTime(TEST_LOCALTIME, locale);
     }
 
     /** Shows that all locale handling will be okay. */
     @Test
-    public void testNoBadLocale() {
+    void noBadLocale() {
         Locale[] locales = Locale.getAvailableLocales();
         for (Locale locale : locales) {
             String s = AbstractStatusesColumn.getBuildTimeString(TEST_TIME, locale);
-            assertNotNull(s);
+            assertThat(s).isNotNull();
         }
     }
 
     @Test
-    public void testShowDate() {
+    void showDate() {
         doTestShowDate(Locale.GERMAN, "16:56", "24.06.2010");
         doTestShowDate(Locale.US, "4:56 PM", "6/24/2010");
     }
 
     private void doTestShowDate(Locale locale, String expectTime, String expectDate) {
         String expectDateTime = expectTime + ", " + expectDate;
-        String expectDateTimeLong = expectDate + " " + expectTime;
-        String expectDateTimeLongAlt = expectDate + ", " + expectTime;
+        Set<String> expectDateTimeLong = new HashSet<>();
+        for (String sep : Arrays.asList(" ", ", ")) {
+            expectDateTimeLong.add(expectDate + sep + expectTime);
+            if (expectTime.contains(" PM")) {
+                expectDateTimeLong.add(expectDate + sep + expectTime.replace(' ', NARROW_NBSP));
+            }
+        }
 
         String ago;
 
         ago = AbstractStatusesColumn.getTimeAgoString(locale, TEST_TIME, false, TimeAgoType.PREFER_DATE_TIME);
-        assertThat(ago, is(anyOf(equalTo(expectDateTimeLong), equalTo(expectDateTimeLongAlt))));
+        assertThat(ago).containsAnyOf(expectDateTimeLong.toArray(String[]::new));
 
         ago = AbstractStatusesColumn.getTimeAgoString(locale, TEST_TIME, true, TimeAgoType.PREFER_DATE_TIME);
-        assertEquals(expectDate, ago);
+        assertThat(ago).isEqualTo(expectDate);
 
         ago = AbstractStatusesColumn.getTimeAgoString(locale, TEST_TIME, true, TimeAgoType.PREFER_DATES);
-        assertEquals(expectDate, ago);
+        assertThat(ago).isEqualTo(expectDate);
 
         // can't easily test this format with current API, but can do a negative test
         ago = AbstractStatusesColumn.getTimeAgoString(locale, TEST_TIME, false, TimeAgoType.DIFF);
-        assertFalse(expectDate.equals(ago));
-        assertFalse(expectDateTime.equals(ago));
-        assertFalse(expectTime.equals(ago));
+        assertThat(ago).isNotEqualTo(expectDate);
+        assertThat(ago).isNotEqualTo(expectDateTime);
+        assertThat(ago).isNotEqualTo(expectTime);
     }
 
     @Test
-    public void testLocalizeDate() {
-        doTestLocalizeDate(Locale.ENGLISH, equalTo("4:56 PM, 6/24/2010"));
-        doTestLocalizeDate(Locale.GERMAN, equalTo("16:56, 24.06.2010"));
-        doTestLocalizeDate(Locale.CANADA, anyOf(equalTo("4:56 PM, 24/06/2010"), equalTo("4:56 p.m., 2010-06-24")));
+    void localizeDate() {
+        assertThat(formatBuildTimeString(Locale.ENGLISH))
+                .containsAnyOf("4:56" + NARROW_NBSP + "PM, 6/24/2010", "4:56 PM, 6/24/2010");
+        assertThat(formatBuildTimeString(Locale.GERMAN)).isEqualTo("16:56, 24.06.2010");
+        assertThat(formatBuildTimeString(Locale.CANADA))
+                .containsAnyOf("4:56" + NARROW_NBSP + "p.m., 2010-06-24", "4:56 p.m., 2010-06-24");
     }
 
-    private void doTestLocalizeDate(Locale locale, Matcher expect) {
-        String formatted = AbstractStatusesColumn.getBuildTimeString(TEST_TIME, locale);
-        assertThat(formatted, expect);
+    private String formatBuildTimeString(Locale locale) {
+        return AbstractStatusesColumn.getBuildTimeString(TEST_TIME, locale);
     }
 
     /** This just shows the weird way the Hudson.util is working. */
     @Test
-    public void testTime() {
+    void time() {
         doTestTime(0, "0 sec");
         doTestTime(500, "0 sec");
         doTestTime(999, "0 sec");
@@ -164,12 +148,12 @@ public class CompactColumnsTest {
 
     private void doTestTime(float diff, String expect) {
         String found = AbstractStatusesColumn.getShortTimestamp(diff);
-        assertEquals(expect, found);
+        assertThat(found).isEqualTo(expect);
     }
 
     @Test
-    @Ignore("Broken on newer versions of Jenkins, because this test tries to work with subclasses of Job and Run")
-    public void testGetBuilds() {
+    @Disabled("Broken on newer versions of Jenkins, because this test tries to work with subclasses of Job and Run")
+    void getBuilds() {
         doTestBuilds("SSFFUFUS", "SU", "SF", "SFU");
         doTestBuilds("FSSFFUFUS", "FSU", "FS", "FSU");
         doTestBuilds("FSSFF", "FS", "FS", "FS");
@@ -227,24 +211,24 @@ public class CompactColumnsTest {
             }
             previous = run;
         }
-        assertEquals(String.valueOf(-time), job._getRuns().firstKey().toString());
+        assertThat(job._getRuns().firstKey()).hasToString(String.valueOf(-time));
         List<BuildInfo> builds = col.getBuilds(job, Locale.US);
-        assertEquals(expectToShow.length(), builds.size());
+        assertThat(builds).hasSize(expectToShow.length());
         for (int i = 0; i < builds.size(); i++) {
             char c = expectToShow.charAt(i);
             BuildInfo build = builds.get(i);
             switch (c) {
                 case 'S':
-                    assertEquals("Stable", build.getStatus());
+                    assertThat(build.getStatus()).isEqualTo("Stable");
                     break;
                 case 'U':
-                    assertEquals("Unstable", build.getStatus());
+                    assertThat(build.getStatus()).isEqualTo("Unstable");
                     break;
                 case 'F':
-                    assertEquals("Failed", build.getStatus());
+                    assertThat(build.getStatus()).isEqualTo("Failed");
                     break;
                 case 'A':
-                    assertEquals("Aborted", build.getStatus());
+                    assertThat(build.getStatus()).isEqualTo("Aborted");
                     break;
             }
         }

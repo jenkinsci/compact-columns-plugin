@@ -10,15 +10,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import jenkins.model.Jenkins;
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class JobNameColorColumn extends AbstractCompactColumn {
 
-    private boolean showColor;
-    private boolean showDescription;
-    private boolean showLastBuild;
+    private final boolean showColor;
+    private final boolean showDescription;
+    private final boolean showLastBuild;
 
     @DataBoundConstructor
     public JobNameColorColumn(
@@ -29,7 +28,6 @@ public class JobNameColorColumn extends AbstractCompactColumn {
         this.showLastBuild = showLastBuild;
     }
 
-    @SuppressWarnings("rawtypes")
     public String getStyle(Job job) {
         Result result = null;
         if (job != null) {
@@ -72,12 +70,11 @@ public class JobNameColorColumn extends AbstractCompactColumn {
         return style;
     }
 
-    @SuppressWarnings("rawtypes")
     public String getToolTip(Job job, Locale locale) throws IOException {
         StringBuilder tip = new StringBuilder();
         if (showDescription) {
             String desc = Jenkins.get().getMarkupFormatter().translate(job.getDescription());
-            if (!StringUtils.isEmpty(desc)) {
+            if (!desc.isBlank()) {
                 tip.append(desc);
             }
         }
@@ -89,15 +86,15 @@ public class JobNameColorColumn extends AbstractCompactColumn {
             if (!builds.isEmpty()) {
                 BuildInfo build = builds.get(0);
                 String desc = AbstractStatusesColumn.getBuildDescriptionToolTip(build, locale);
-                if (!StringUtils.isEmpty(desc)) {
-                    if (tip.length() > 0) {
+                if (!desc.isEmpty()) {
+                    if (!tip.isEmpty()) {
                         tip.append("<hr/>");
                     }
                     tip.append(desc);
                 }
             }
         }
-        return (tip.length() > 0) ? tip.toString() : null;
+        return (!tip.isEmpty()) ? tip.toString() : null;
     }
 
     public boolean isShowColor() {

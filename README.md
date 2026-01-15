@@ -1,11 +1,11 @@
 # Compact Columns Plugin
 
-[![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/compact-columns.svg)](https://plugins.jenkins.io/compact-columns)
-[![GitHub release](https://img.shields.io/github/release/jenkinsci/compact-columns-plugin.svg?label=changelog)](https://github.com/jenkinsci/compact-columns-plugin/releases/latest)
-[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/compact-columns.svg?color=blue)](https://plugins.jenkins.io/compact-columns)
+[![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/compact-columns)](https://plugins.jenkins.io/compact-columns)
+[![GitHub release](https://img.shields.io/github/release/jenkinsci/compact-columns-plugin?label=changelog)](https://github.com/jenkinsci/compact-columns-plugin/releases/latest)
+[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/compact-columns?color=blue)](https://plugins.jenkins.io/compact-columns)
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins%2Fcompact-columns-plugin%2Fmain)](https://ci.jenkins.io/job/Plugins/job/compact-columns-plugin/job/main/)
-[![GitHub license](https://img.shields.io/github/license/jenkinsci/compact-columns-plugin.svg)](https://github.com/jenkinsci/compact-columns-plugin/blob/master/LICENSE)
-[![Maintenance](https://img.shields.io/maintenance/yes/2024.svg)]()
+[![GitHub license](https://img.shields.io/github/license/jenkinsci/compact-columns-plugin)](https://github.com/jenkinsci/compact-columns-plugin/blob/main/LICENSE)
+![GitHub last commit](https://img.shields.io/github/last-commit/jenkinsci/compact-columns-plugin)
 
 More compact columns for showing last success and failure.
 Easier to understand, and takes less room in your view.
